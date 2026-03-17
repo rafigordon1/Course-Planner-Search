@@ -3,123 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Course Planner</title>
+<title>Course Planner Support</title>
 
 <style>
 :root {
-  --blue: #041a3b;
-  --accent: #0bb3d6;
+  --unimelb-navy: #094183;
+  --unimelb-cyan: #0bb3d6;
+  --unimelb-hover: #062b59;
   --border: #d6dbe1;
   --light: #f5f7fa;
+  --text: #333333;
 }
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--light);
+  color: var(--text);
 }
 
 /* HERO */
 .hero {
-  background: var(--blue);
+  background: var(--unimelb-navy);
   color: white;
-  padding: 60px 20px 40px;
+  padding: 80px 20px 60px;
+  position: relative;
 }
 
 .hero h1 {
   max-width: 1000px;
-  margin: 0 auto 20px;
+  margin: 0 auto 30px;
   font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 /* SEARCH */
-.search-bar {
+.search-wrapper {
   max-width: 1000px;
   margin: auto;
+  position: relative;
+}
+
+.search-bar {
   display: flex;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 4px;
+  overflow: hidden;
+  background: white;
 }
 
 .search-bar input {
   flex: 1;
-  padding: 16px;
-  font-size: 1rem;
+  padding: 20px 24px;
+  font-size: 1.1rem;
   border: none;
   outline: none;
+  color: var(--text);
+}
+
+.search-bar input::placeholder {
+  color: #888;
 }
 
 .search-bar button {
-  background: var(--accent);
+  background: var(--unimelb-cyan);
   border: none;
-  padding: 0 20px;
+  padding: 0 30px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  transition: background 0.2s;
+}
+
+.search-bar button:hover {
+  background: #09a2c2;
 }
 
 .search-icon {
-  width: 18px;
-  height: 18px;
-  border: 2px solid #041a3b;
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--unimelb-navy);
   border-radius: 50%;
   position: relative;
 }
+
 .search-icon::after {
   content: "";
   position: absolute;
-  width: 10px;
-  height: 2px;
-  background: #041a3b;
-  bottom: -6px;
-  right: -6px;
+  width: 12px;
+  height: 3px;
+  background: var(--unimelb-navy);
+  bottom: -7px;
+  right: -7px;
   transform: rotate(45deg);
 }
 
 /* DROPDOWN */
 .dropdown {
-  max-width: 1000px;
-  margin: auto;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
   background: white;
   border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  z-index: 10;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .dropdown div {
-  padding: 12px;
+  padding: 16px 24px;
   cursor: pointer;
-  color: black; /* FIXED */
+  color: var(--text);
+  font-size: 1.05rem;
+  border-bottom: 1px solid #eee;
+}
+
+.dropdown div:last-child {
+  border-bottom: none;
 }
 
 .dropdown div:hover,
-.active {
+.dropdown div.active {
   background: #eef3f8;
+  color: var(--unimelb-navy);
+  font-weight: 500;
 }
 
 /* RESULTS */
 .container {
   max-width: 1000px;
-  margin: 40px auto;
+  margin: 50px auto;
   padding: 0 20px;
+}
+
+.results-section h2 {
+  color: var(--unimelb-navy);
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border);
+}
+
+.top-links {
+  margin-bottom: 50px;
 }
 
 .top-links a {
   display: block;
-  margin-bottom: 10px;
-  color: #094183;
-  font-weight: 600;
+  margin-bottom: 16px;
+  color: #0056b3;
+  font-size: 1.15rem;
+  font-weight: 500;
   text-decoration: none;
+  padding-left: 15px;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.top-links a::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--unimelb-cyan);
+}
+
+.top-links a:hover {
+  text-decoration: underline;
+  color: var(--unimelb-navy);
 }
 
 .grid {
-  margin-top: 30px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
 }
 
-.card {
-  background: white;
-  border: 1px solid var(--border);
-  padding: 20px;
+/* L1 Aesthetic Buttons */
+.l1-card {
+  background: var(--unimelb-navy);
+  color: white;
+  border-radius: 6px;
+  padding: 30px 24px;
   cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(9, 65, 131, 0.15);
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.l1-card:hover {
+  background: var(--unimelb-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(9, 65, 131, 0.25);
+  border-color: var(--unimelb-cyan);
+}
+
+.l1-card::after {
+  content: "›";
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-left: 20px;
+  color: var(--unimelb-cyan);
+  font-weight: 300;
+}
+
+.no-results {
+  color: #666;
+  font-size: 1.1rem;
+  font-style: italic;
 }
 </style>
 </head>
@@ -127,16 +229,16 @@ body {
 <body>
 
 <div class="hero">
-  <h1>Course Planner</h1>
-
-  <div class="search-bar">
-    <input id="search" placeholder="Search by keywords">
-    <button id="searchBtn">
-      <div class="search-icon"></div>
-    </button>
+  <h1>How can we help you?</h1>
+  <div class="search-wrapper">
+    <div class="search-bar">
+      <input id="search" placeholder="Search by keywords (e.g., exams, enrolment, transfer)" autocomplete="off">
+      <button id="searchBtn" aria-label="Search">
+        <div class="search-icon"></div>
+      </button>
+    </div>
+    <div id="dropdown" class="dropdown"></div>
   </div>
-
-  <div id="dropdown" class="dropdown"></div>
 </div>
 
 <div class="container">
@@ -148,60 +250,150 @@ body {
    L1 DATA
 ------------------------- */
 const L1 = [
-"I’m a new student and need help getting started",
-"I need support with exams, assessments, results, or ongoing circumstances affecting my study",
-"I’m considering another course or graduate study",
-"I need help choosing, changing, or planning my subjects",
-"I need to understand my course structure, majors/minors and study load",
-"I need help enrolling and managing my study plan for my course or concurrent diploma",
-"I have questions about credit from my previous study",
-"I want to study overseas as part of my course"
+  "I'm a new student and need help getting started",
+  "I need support with exams, assessments, results, or ongoing circumstances affecting my study",
+  "I'm considering another course or graduate study",
+  "I need help choosing, changing, or planning my subjects",
+  "I need to understand my course structure, majors/minors and study load",
+  "I need help enrolling and managing my study plan for my course or concurrent diploma",
+  "I have questions about credit from my previous study",
+  "I want to study overseas as part of my course"
 ];
 
 /* -------------------------
-   L2 → L1 MAPPING (CRITICAL FIX)
+   CLEANED L2 → L1 MAPPING
 ------------------------- */
 const mapping = {
-"What should I do if my student visa isn’t granted in time to start my course?": L1[0],
-"How do I plan my first year and enrol before semester starts?": L1[0],
-"What is the Student Learning Entitlement (SLE)?": L1[0],
+  // L1[0]
+  "What should I do if my student visa isn't granted in time to start my course?": L1[0],
+  "How do I plan my first year and enrol before semester starts?": L1[0],
+  "What is the Student Learning Entitlement (SLE)?": L1[0],
 
-"How is my Weighted Average Mark (WAM) calculated and what counts toward it?": L1[1],
-"What support can I get if circumstances affect my assessments?": L1[1],
-"What should I do if I fail a subject?": L1[1],
+  // L1[1]
+  "How is my Weighted Average Mark (WAM) calculated and what counts toward it?": L1[1],
+  "How do I access ongoing support, including an Academic Adjustment Plan (AAP)?": L1[1],
+  "What support can I get if circumstances affect my assessments?": L1[1],
+  "What should I do if I fail a subject?": L1[1],
+  "Why can't I see my final results after the results release date?": L1[1],
+  "What options do I have if I miss, fail, or am worried about an exam?": L1[1],
+  "How do I access a faculty-managed supplementary exam?": L1[1],
+  "Can I apply to extend my Maximum Course Length before a CAPC meeting?": L1[1],
+  "What is Final Subject Assessment (FSA), and how does it work?": L1[1],
 
-"How do I transfer from one University of Melbourne degree to another?": L1[2],
-"What are the entry requirements for my course, and are there guaranteed entry pathways?": L1[2],
+  // L1[2]
+  "What are the entry requirements for my course, and are there guaranteed entry pathways?": L1[2],
+  "What is Graduate Access Melbourne (GAM), and how do I apply?": L1[2],
+  "Who can I speak to about graduate coursework study options?": L1[2],
+  "Do I still need to re-enrol if I've applied to transfer courses?": L1[2],
+  "How do I transfer from one University of Melbourne degree to another?": L1[2],
+  "What should I do about my summer subject if I'm transferring courses?": L1[2],
 
-"Can someone review my course plan in My Course Planner?": L1[3],
-"Can I get advice on the subjects I’ve chosen this semester?": L1[3],
+  // L1[3]
+  "Can someone review my course plan in My Course Planner?": L1[3],
+  "What happens if I withdraw from a subject?": L1[3],
+  "Can I get advice on the subjects I've chosen this semester?": L1[3],
+  "How do I take part in Melbourne Plus activities?": L1[3],
+  "Can I get help with my Skills Towards Employment Program (STEP) subject?": L1[3],
+  "What internship subjects can I take, and how do I apply?": L1[3],
+  "Can someone help me understand my subject prerequisites?": L1[3],
 
-"Can someone help me understand my course structure and course rules?": L1[4],
-"How do I plan or change my major, minor, or specialisation?": L1[4],
+  // L1[4]
+  "What are my part-time study options, and will it affect my course plan?": L1[4],
+  "What do I need to know about changing my study load (reducing or overloading)?": L1[4],
+  "Am I eligible for an early exit award?": L1[4],
+  "Can someone help me understand my course structure and course rules?": L1[4],
+  "What do I need to know before taking a Leave of Absence?": L1[4],
+  "Am I on track to complete my degree?": L1[4],
+  "How do I plan or change my major, minor, or specialisation?": L1[4],
 
-"How do I make changes to my Study Plan or subjects?": L1[5],
-"Why can’t I enrol in a subject?": L1[5],
+  // L1[5]
+  "What do I need to know before withdrawing from my course?": L1[5],
+  "Am I eligible for a concurrent diploma, and how do I add one to my course?": L1[5],
+  "Can I apply for Honours before finishing my concurrent diploma?": L1[5],
+  "Can I defer my course, and where can I get advice before deciding?": L1[5],
+  "How do I withdraw from my course?": L1[5],
+  "Why can't I enrol in a subject?": L1[5],
+  "How do I make changes to my Study Plan or subjects?": L1[5],
+  "Why can't I enrol in a quota subject?": L1[5],
+  "What should I do if I've been removed from my course because I didn't enrol or re-enrol correctly?": L1[5],
+  "What do I need to do to re-enrol, and what happens if I miss the deadline?": L1[5],
+  "What is a concurrent diploma, and how does it work?": L1[5],
+  "Can I change how a completed subject counts across my Bachelor and concurrent diploma?": L1[5],
 
-"Am I eligible for advanced standing (credit) in my course?": L1[6],
+  // L1[6]
+  "Can I change my entry point in a graduate course?": L1[6],
+  "How do I plan my course if I have advanced standing (credit)?": L1[6],
+  "Am I eligible for advanced standing (credit) in my course?": L1[6],
+  "Can I re-apply for advanced standing (credit) that I previously removed?": L1[6],
+  "Can I enrol in subjects while my advanced standing (credit) application is being assessed?": L1[6],
+  "Can I get an exemption for my Discovery subject?": L1[6],
+  "Can I remove advanced standing (credit) that's already been applied to my course?": L1[6],
 
-"Can I study overseas as part of my course?": L1[7],
-"How will studying on exchange affect my WAM?": L1[7]
+  // L1[7]
+  "What do I need to know about going on exchange?": L1[7],
+  "Do course progression rules still apply while I'm on exchange?": L1[7],
+  "What do I need to know about going on exchange in my final semester?": L1[7],
+  "Can I study overseas as part of my course?": L1[7],
+  "How will studying on exchange affect my WAM?": L1[7],
+  "How do I know which exchange subjects will count for credit toward my degree?": L1[7]
 };
 
-/* Build L2 list */
 const L2 = Object.keys(mapping);
 
 /* -------------------------
-   SEARCH
+   FUZZY SEARCH LOGIC
 ------------------------- */
-function match(text, query) {
-  const words = query.toLowerCase().split(" ").filter(Boolean);
-  text = text.toLowerCase();
-  return words.some(w => text.includes(w));
+// Levenshtein distance for typo tolerance
+function levenshtein(a, b) {
+  if (a.length === 0) return b.length;
+  if (b.length === 0) return a.length;
+  const matrix = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
+  for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
+  for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
+  for (let j = 1; j <= b.length; j++) {
+    for (let i = 1; i <= a.length; i++) {
+      const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[j][i] = Math.min(
+        matrix[j][i - 1] + 1,
+        matrix[j - 1][i] + 1,
+        matrix[j - 1][i - 1] + indicator
+      );
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+// Scoring function for fuzzy match
+function getScore(query, text) {
+  const qWords = query.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(Boolean);
+  const tWords = text.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(Boolean);
+  let score = 0;
+
+  if (text.toLowerCase().includes(query.toLowerCase())) score += 50; // High bonus for full exact substring
+
+  for (let qw of qWords) {
+    if (text.toLowerCase().includes(qw)) score += 10;
+    for (let tw of tWords) {
+      if (qw === tw) score += 20; 
+      else if (tw.startsWith(qw)) score += 5; 
+      else if (qw.length > 3 && levenshtein(qw, tw) <= 1) score += 5; // Handle typos
+    }
+  }
+  return score;
+}
+
+function getTopMatches(query, limit = 5) {
+  if (!query.trim()) return [];
+  
+  const scoredL2 = L2.map(item => ({ item, score: getScore(query, item) }))
+                     .filter(x => x.score > 0)
+                     .sort((a, b) => b.score - a.score);
+
+  return scoredL2.slice(0, limit).map(x => x.item);
 }
 
 /* -------------------------
-   DROPDOWN
+   DOM ELEMENTS
 ------------------------- */
 const input = document.getElementById("search");
 const dropdown = document.getElementById("dropdown");
@@ -210,42 +402,56 @@ const button = document.getElementById("searchBtn");
 
 let currentResults = [];
 
+/* -------------------------
+   DROPDOWN
+------------------------- */
 function updateDropdown(query) {
-  if (!query) return dropdown.innerHTML = "";
+  currentResults = getTopMatches(query);
 
-  let matches = L2.filter(item => match(item, query));
-
-  if (!matches.length) {
-    matches = L1.filter(item => match(item, query));
+  if (!query || currentResults.length === 0) {
+    dropdown.innerHTML = "";
+    return;
   }
 
-  currentResults = matches.slice(0,5);
-
   dropdown.innerHTML = currentResults
-    .map((r,i) => `<div data-i="${i}">${r}</div>`)
+    .map((r, i) => `<div data-i="${i}" onmousedown="selectFromDropdown('${r.replace(/'/g, "\\'")}')">${r}</div>`)
     .join("");
 }
 
+window.selectFromDropdown = function(selectedText) {
+  input.value = selectedText;
+  renderResults(selectedText);
+  dropdown.innerHTML = "";
+};
+
 /* -------------------------
-   RESULTS
+   RESULTS RENDER
 ------------------------- */
 function renderResults(query) {
-  const matchedL2 = L2.filter(q => match(q, query)).slice(0,5);
+  const matchedL2 = getTopMatches(query, 5);
 
-  /* derive L1 FROM mapping */
-  const l1Set = new Set(
-    matchedL2.map(q => mapping[q])
-  );
+  if (matchedL2.length === 0) {
+    results.innerHTML = `<div class="no-results">No exact matches found. Try adjusting your keywords.</div>`;
+    return;
+  }
 
+  // Derive unique L1 categories from the matched L2s
+  const l1Set = new Set(matchedL2.map(q => mapping[q]));
   const matchedL1 = [...l1Set];
 
   results.innerHTML = `
-    <div class="top-links">
-      ${matchedL2.map(x => `<a href="#">${x}</a>`).join("")}
+    <div class="results-section">
+      <h2>Suggested FAQs</h2>
+      <div class="top-links">
+        ${matchedL2.map(x => `<a href="#">${x}</a>`).join("")}
+      </div>
     </div>
 
-    <div class="grid">
-      ${matchedL1.map(x => `<div class="card">${x}</div>`).join("")}
+    <div class="results-section">
+      <h2>Browse Related Categories</h2>
+      <div class="grid">
+        ${matchedL1.map(x => `<a href="#" class="l1-card">${x}</a>`).join("")}
+      </div>
     </div>
   `;
 }
@@ -267,9 +473,9 @@ input.addEventListener("keydown", e => {
   }
 });
 
-/* click outside */
+// Close dropdown on outside click
 document.addEventListener("click", e => {
-  if (!e.target.closest(".search-bar")) {
+  if (!e.target.closest(".search-wrapper")) {
     dropdown.innerHTML = "";
   }
 });
