@@ -332,25 +332,50 @@ const mapping = {
 const L2 = Object.keys(mapping);
 
 /* -------------------------
-   IMPROVED SEARCH LOGIC
+   SYNONYM & SEARCH LOGIC
 ------------------------- */
-// Common words that distort search rankings
+// Define related concepts to catch misalignments (e.g., "abroad" -> "exchange")
+const synonymMap = {
+  "abroad": ["exchange", "overseas", "international"],
+  "overseas": ["exchange", "abroad", "international"],
+  "exchange": ["abroad", "overseas", "international"],
+  "drop": ["withdraw", "leave", "remove", "cancel"],
+  "quit": ["withdraw", "leave", "exit", "defer"],
+  "swap": ["change", "switch", "transfer"],
+  "switch": ["change", "swap", "transfer"],
+  "transfer": ["change", "swap", "switch"],
+  "marks": ["wam", "results", "grades", "score", "gpa"],
+  "grades": ["wam", "results", "marks", "score", "gpa"],
+  "gpa": ["wam", "results", "marks", "score", "grades"],
+  "score": ["wam", "results", "marks", "grades", "gpa"],
+  "sick": ["circumstances", "support", "ill", "medical", "aap"],
+  "illness": ["circumstances", "support", "sick", "medical"],
+  "struggling": ["support", "help", "circumstances"],
+  "register": ["enrol", "add", "sign"],
+  "masters": ["graduate", "postgraduate", "gam"],
+  "phd": ["graduate", "postgraduate"],
+  "postgraduate": ["graduate", "masters", "phd"],
+  "rpl": ["credit", "advanced standing", "exemption"],
+  "exemption": ["credit", "advanced standing", "rpl"],
+  "prereq": ["prerequisite", "requirements"],
+  "rules": ["structure", "progression"]
+};
+
+// Expanded stop words to prevent generic words from overpowering specific intents
 const stopWords = new Set([
   "i", "me", "my", "we", "our", "you", "your", "he", "his", "she", "her", "it", "they", "their",
   "what", "which", "who", "whom", "this", "that", "these", "those",
   "am", "is", "are", "was", "were", "be", "been", "have", "has", "had", "do", "does", "did", "can", "could", "will", "would",
   "a", "an", "the", "and", "but", "if", "or", "because", "as", "of", "at", "by", "for", "with", "about", 
-  "to", "from", "in", "out", "on", "off", "over", "under", "where", "when", "why", "how", "all", "any", "some"
+  "to", "from", "in", "out", "on", "off", "over", "under", "where", "when", "why", "how", "all", "any", "some",
+  "study", "course", "subject", "degree", "university", "unimelb", "melbourne", "student", "go"
 ]);
 
 function getScore(query, text) {
-  // Extract all alphanumeric words
   const rawQWords = query.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(Boolean);
-  
-  // Filter out stop words to focus on meaningful keywords (like "exchange")
   const meaningfulQWords = rawQWords.filter(w => !stopWords.has(w));
   
-  // If user only typed stop words (e.g., "how do i"), fall back to the raw words
+  // If user only typed stop words, fall back to the raw words
   const searchWords = meaningfulQWords.length > 0 ? meaningfulQWords : rawQWords;
 
   const textLower = text.toLowerCase();
@@ -358,17 +383,28 @@ function getScore(query, text) {
 
   // Massive bonus if the exact query phrase is found
   if (textLower.includes(query.toLowerCase())) {
-    score += 100;
+    score += 150;
   }
 
   for (let qw of searchWords) {
-    // Exact word boundary match (e.g., "exchange" matches "exchange", not "exchanges" right away)
+    // Exact word boundary match
     const exactWordRegex = new RegExp(`\\b${qw}\\b`, 'i');
     if (exactWordRegex.test(textLower)) {
-      score += 30;
+      score += 40;
     } else if (textLower.includes(qw)) {
-      // Partial match (e.g., "exchang" matches "exchange")
       score += 10;
+    }
+
+    // Synonym checking
+    if (synonymMap[qw]) {
+      for (let syn of synonymMap[qw]) {
+        const synRegex = new RegExp(`\\b${syn}\\b`, 'i');
+        if (synRegex.test(textLower)) {
+          score += 25; // High value for hitting a related core concept
+        } else if (textLower.includes(syn)) {
+          score += 5;
+        }
+      }
     }
   }
   
