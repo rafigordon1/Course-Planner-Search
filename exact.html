@@ -160,16 +160,7 @@ body {
   font-size: 1.15rem;
   font-weight: 500;
   text-decoration: none;
-  padding-left: 15px;
-  position: relative;
   transition: color 0.2s;
-}
-
-.top-links a::before {
-  content: "→";
-  position: absolute;
-  left: 0;
-  color: var(--unimelb-cyan);
 }
 
 .top-links a:hover {
@@ -341,44 +332,46 @@ const mapping = {
 const L2 = Object.keys(mapping);
 
 /* -------------------------
-   FUZZY SEARCH LOGIC
+   IMPROVED SEARCH LOGIC
 ------------------------- */
-// Levenshtein distance for typo tolerance
-function levenshtein(a, b) {
-  if (a.length === 0) return b.length;
-  if (b.length === 0) return a.length;
-  const matrix = Array(b.length + 1).fill(null).map(() => Array(a.length + 1).fill(null));
-  for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
-  for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
-  for (let j = 1; j <= b.length; j++) {
-    for (let i = 1; i <= a.length; i++) {
-      const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
-      matrix[j][i] = Math.min(
-        matrix[j][i - 1] + 1,
-        matrix[j - 1][i] + 1,
-        matrix[j - 1][i - 1] + indicator
-      );
-    }
-  }
-  return matrix[b.length][a.length];
-}
+// Common words that distort search rankings
+const stopWords = new Set([
+  "i", "me", "my", "we", "our", "you", "your", "he", "his", "she", "her", "it", "they", "their",
+  "what", "which", "who", "whom", "this", "that", "these", "those",
+  "am", "is", "are", "was", "were", "be", "been", "have", "has", "had", "do", "does", "did", "can", "could", "will", "would",
+  "a", "an", "the", "and", "but", "if", "or", "because", "as", "of", "at", "by", "for", "with", "about", 
+  "to", "from", "in", "out", "on", "off", "over", "under", "where", "when", "why", "how", "all", "any", "some"
+]);
 
-// Scoring function for fuzzy match
 function getScore(query, text) {
-  const qWords = query.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(Boolean);
-  const tWords = text.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(Boolean);
+  // Extract all alphanumeric words
+  const rawQWords = query.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(Boolean);
+  
+  // Filter out stop words to focus on meaningful keywords (like "exchange")
+  const meaningfulQWords = rawQWords.filter(w => !stopWords.has(w));
+  
+  // If user only typed stop words (e.g., "how do i"), fall back to the raw words
+  const searchWords = meaningfulQWords.length > 0 ? meaningfulQWords : rawQWords;
+
+  const textLower = text.toLowerCase();
   let score = 0;
 
-  if (text.toLowerCase().includes(query.toLowerCase())) score += 50; // High bonus for full exact substring
+  // Massive bonus if the exact query phrase is found
+  if (textLower.includes(query.toLowerCase())) {
+    score += 100;
+  }
 
-  for (let qw of qWords) {
-    if (text.toLowerCase().includes(qw)) score += 10;
-    for (let tw of tWords) {
-      if (qw === tw) score += 20; 
-      else if (tw.startsWith(qw)) score += 5; 
-      else if (qw.length > 3 && levenshtein(qw, tw) <= 1) score += 5; // Handle typos
+  for (let qw of searchWords) {
+    // Exact word boundary match (e.g., "exchange" matches "exchange", not "exchanges" right away)
+    const exactWordRegex = new RegExp(`\\b${qw}\\b`, 'i');
+    if (exactWordRegex.test(textLower)) {
+      score += 30;
+    } else if (textLower.includes(qw)) {
+      // Partial match (e.g., "exchang" matches "exchange")
+      score += 10;
     }
   }
+  
   return score;
 }
 
