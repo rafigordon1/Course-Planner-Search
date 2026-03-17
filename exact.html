@@ -252,15 +252,13 @@ const L1 = [
 ];
 
 /* -------------------------
-   CLEANED L2 → L1 MAPPING
+   L2 → L1 MAPPING
 ------------------------- */
 const mapping = {
-  // L1[0]
   "What should I do if my student visa isn't granted in time to start my course?": L1[0],
   "How do I plan my first year and enrol before semester starts?": L1[0],
   "What is the Student Learning Entitlement (SLE)?": L1[0],
 
-  // L1[1]
   "How is my Weighted Average Mark (WAM) calculated and what counts toward it?": L1[1],
   "How do I access ongoing support, including an Academic Adjustment Plan (AAP)?": L1[1],
   "What support can I get if circumstances affect my assessments?": L1[1],
@@ -271,7 +269,6 @@ const mapping = {
   "Can I apply to extend my Maximum Course Length before a CAPC meeting?": L1[1],
   "What is Final Subject Assessment (FSA), and how does it work?": L1[1],
 
-  // L1[2]
   "What are the entry requirements for my course, and are there guaranteed entry pathways?": L1[2],
   "What is Graduate Access Melbourne (GAM), and how do I apply?": L1[2],
   "Who can I speak to about graduate coursework study options?": L1[2],
@@ -279,7 +276,6 @@ const mapping = {
   "How do I transfer from one University of Melbourne degree to another?": L1[2],
   "What should I do about my summer subject if I'm transferring courses?": L1[2],
 
-  // L1[3]
   "Can someone review my course plan in My Course Planner?": L1[3],
   "What happens if I withdraw from a subject?": L1[3],
   "Can I get advice on the subjects I've chosen this semester?": L1[3],
@@ -288,7 +284,6 @@ const mapping = {
   "What internship subjects can I take, and how do I apply?": L1[3],
   "Can someone help me understand my subject prerequisites?": L1[3],
 
-  // L1[4]
   "What are my part-time study options, and will it affect my course plan?": L1[4],
   "What do I need to know about changing my study load (reducing or overloading)?": L1[4],
   "Am I eligible for an early exit award?": L1[4],
@@ -297,7 +292,6 @@ const mapping = {
   "Am I on track to complete my degree?": L1[4],
   "How do I plan or change my major, minor, or specialisation?": L1[4],
 
-  // L1[5]
   "What do I need to know before withdrawing from my course?": L1[5],
   "Am I eligible for a concurrent diploma, and how do I add one to my course?": L1[5],
   "Can I apply for Honours before finishing my concurrent diploma?": L1[5],
@@ -311,7 +305,6 @@ const mapping = {
   "What is a concurrent diploma, and how does it work?": L1[5],
   "Can I change how a completed subject counts across my Bachelor and concurrent diploma?": L1[5],
 
-  // L1[6]
   "Can I change my entry point in a graduate course?": L1[6],
   "How do I plan my course if I have advanced standing (credit)?": L1[6],
   "Am I eligible for advanced standing (credit) in my course?": L1[6],
@@ -320,7 +313,6 @@ const mapping = {
   "Can I get an exemption for my Discovery subject?": L1[6],
   "Can I remove advanced standing (credit) that's already been applied to my course?": L1[6],
 
-  // L1[7]
   "What do I need to know about going on exchange?": L1[7],
   "Do course progression rules still apply while I'm on exchange?": L1[7],
   "What do I need to know about going on exchange in my final semester?": L1[7],
@@ -329,12 +321,75 @@ const mapping = {
   "How do I know which exchange subjects will count for credit toward my degree?": L1[7]
 };
 
+/* -------------------------
+   L2 CONTENT MAPPING
+   (Used for deep keyword searching)
+------------------------- */
+const contentMapping = {
+  "What should I do if my student visa isn't granted in time to start my course?": "student visa delays arrive orientation commence CoE online defer",
+  "How do I plan my first year and enrol before semester starts?": "plan first year enrol start semester get started webinar timetable",
+  "What is the Student Learning Entitlement (SLE)?": "student learning entitlement SLE limit CSP EFTSL credit points",
+  "How is my Weighted Average Mark (WAM) calculated and what counts toward it?": "WAM weighted average mark calculate performance numeric fail continuing",
+  "How do I access ongoing support, including an Academic Adjustment Plan (AAP)?": "ongoing support AAP academic adjustment plan disability health mental health illness religious sick register exam adjustments",
+  "What support can I get if circumstances affect my assessments?": "special consideration illness bereavement trauma short-term extension sick mental health fail exam",
+  "What should I do if I fail a subject?": "fail subject repeat replace elective breadth leave of absence withdraw at risk visa",
+  "Why can't I see my final results after the results release date?": "final results release date delayed special supplementary exam non-standard",
+  "What options do I have if I miss, fail, or am worried about an exam?": "miss fail worried stress exam special consideration supplementary academic skills",
+  "How do I access a faculty-managed supplementary exam?": "faculty-managed supplementary exam SUP further assessment",
+  "Can I apply to extend my Maximum Course Length before a CAPC meeting?": "extend maximum course length CAPC unsatisfactory academic progress",
+  "What is Final Subject Assessment (FSA), and how does it work?": "Final Subject Assessment FSA fail final semester penultimate",
+  "What are the entry requirements for my course, and are there guaranteed entry pathways?": "entry requirements guaranteed pathways ATAR WAM prerequisite interview",
+  "What is Graduate Access Melbourne (GAM), and how do I apply?": "Graduate Access Melbourne GAM equity personal circumstances disadvantaged disability",
+  "Who can I speak to about graduate coursework study options?": "graduate coursework study options master degree course planning",
+  "Do I still need to re-enrol if I've applied to transfer courses?": "re-enrol course transfer early exit wait outcome withdraw fees",
+  "How do I transfer from one University of Melbourne degree to another?": "internal course transfer change degree undergraduate",
+  "What should I do about my summer subject if I'm transferring courses?": "summer subject transfer course advanced standing credit EAF early commencement",
+  "Can someone review my course plan in My Course Planner?": "review course plan My Course Planner URL advice",
+  "What happens if I withdraw from a subject?": "withdraw subject financial academic consequences census date study load visa",
+  "Can I get advice on the subjects I've chosen this semester?": "advice subject choices handbook course planner stop 1 coordinator",
+  "How do I take part in Melbourne Plus activities?": "Melbourne Plus activities co-curricular skills digital credentials",
+  "Can I get help with my Skills Towards Employment Program (STEP) subject?": "STEP Skills Towards Employment Program engineering practice hurdle",
+  "What internship subjects can I take, and how do I apply?": "internship subjects apply curricular extracurricular students@work employability",
+  "Can someone help me understand my subject prerequisites?": "subject prerequisites co-requisites handbook eligibility",
+  "What are my part-time study options, and will it affect my course plan?": "part-time study options full-time load international student visa 8202 duration",
+  "What do I need to know about changing my study load (reducing or overloading)?": "changing study load reducing overloading RSL compassionate compelling visa",
+  "Am I eligible for an early exit award?": "early exit award lower qualification graduate certificate diploma",
+  "Can someone help me understand my course structure and course rules?": "course structure rules handbook progression completion",
+  "What do I need to know before taking a Leave of Absence?": "Leave of Absence LoA pause course defer withdraw break",
+  "Am I on track to complete my degree?": "on track complete degree graduation course planner handbook",
+  "How do I plan or change my major, minor, or specialisation?": "plan change major minor specialisation study plan EAF",
+  "What do I need to know before withdrawing from my course?": "withdraw course leave un-enrol discontinue advice fees",
+  "Am I eligible for a concurrent diploma, and how do I add one to my course?": "concurrent diploma languages mathematical sciences computing music extra year",
+  "Can I apply for Honours before finishing my concurrent diploma?": "Honours concurrent diploma finish withdraw",
+  "Can I defer my course, and where can I get advice before deciding?": "defer course keep place delay start census date",
+  "How do I withdraw from my course?": "withdraw course leave quit drop out cancel enrolment",
+  "Why can't I enrol in a subject?": "can't enrol subject rules prerequisites co-requisites space study plan EAF",
+  "How do I make changes to my Study Plan or subjects?": "make changes study plan add remove swap subjects withdraw",
+  "Why can't I enrol in a quota subject?": "enrol quota subject limited places faculty selection ballot",
+  "What should I do if I've been removed from my course because I didn't enrol or re-enrol correctly?": "removed course cancelled didn't enrol re-enrol reinstatement re-admission",
+  "What do I need to do to re-enrol, and what happens if I miss the deadline?": "re-enrol deadline miss cancel CFE sanction reinstatement",
+  "What is a concurrent diploma, and how does it work?": "concurrent diploma extra qualification honours",
+  "Can I change how a completed subject counts across my Bachelor and concurrent diploma?": "change completed subject count bachelor concurrent diploma",
+  "Can I change my entry point in a graduate course?": "change entry point graduate course reduced credit advanced standing",
+  "How do I plan my course if I have advanced standing (credit)?": "plan course advanced standing credit calculator exemptions",
+  "Am I eligible for advanced standing (credit) in my course?": "eligible advanced standing credit prior study exemptions",
+  "Can I re-apply for advanced standing (credit) that I previously removed?": "re-apply advanced standing credit removed study plan",
+  "Can I enrol in subjects while my advanced standing (credit) application is being assessed?": "enrol subjects advanced standing credit application assessed delay",
+  "Can I get an exemption for my Discovery subject?": "exemption discovery subject first-year advanced standing",
+  "Can I remove advanced standing (credit) that's already been applied to my course?": "remove advanced standing credit already applied progression",
+  "What do I need to know about going on exchange?": "exchange study overseas abroad international MyWorld short-term semester",
+  "Do course progression rules still apply while I'm on exchange?": "course progression rules exchange OSSP levels subjects",
+  "What do I need to know about going on exchange in my final semester?": "exchange final semester delay completion graduation OS-HELP loan",
+  "Can I study overseas as part of my course?": "study overseas exchange abroad partner university global learning",
+  "How will studying on exchange affect my WAM?": "exchange affect WAM grades marks transcript no effect",
+  "How do I know which exchange subjects will count for credit toward my degree?": "exchange subjects count credit OSSP destination outcome approval"
+};
+
 const L2 = Object.keys(mapping);
 
 /* -------------------------
    SYNONYM & SEARCH LOGIC
 ------------------------- */
-// Define related concepts to catch misalignments (e.g., "abroad" -> "exchange")
 const synonymMap = {
   "abroad": ["exchange", "overseas", "international"],
   "overseas": ["exchange", "abroad", "international"],
@@ -348,9 +403,9 @@ const synonymMap = {
   "grades": ["wam", "results", "marks", "score", "gpa"],
   "gpa": ["wam", "results", "marks", "score", "grades"],
   "score": ["wam", "results", "marks", "grades", "gpa"],
-  "sick": ["circumstances", "support", "ill", "medical", "aap"],
-  "illness": ["circumstances", "support", "sick", "medical"],
-  "struggling": ["support", "help", "circumstances"],
+  "sick": ["circumstances", "support", "ill", "medical", "aap", "health", "special consideration"],
+  "illness": ["circumstances", "support", "sick", "medical", "special consideration"],
+  "struggling": ["support", "help", "circumstances", "special consideration"],
   "register": ["enrol", "add", "sign"],
   "masters": ["graduate", "postgraduate", "gam"],
   "phd": ["graduate", "postgraduate"],
@@ -358,52 +413,50 @@ const synonymMap = {
   "rpl": ["credit", "advanced standing", "exemption"],
   "exemption": ["credit", "advanced standing", "rpl"],
   "prereq": ["prerequisite", "requirements"],
-  "rules": ["structure", "progression"]
+  "rules": ["structure", "progression"],
+  "exm": ["exam", "assessment", "test"], // Common typo catching
+  "test": ["exam", "assessment"]
 };
 
-// Expanded stop words to prevent generic words from overpowering specific intents
 const stopWords = new Set([
-  "i", "me", "my", "we", "our", "you", "your", "he", "his", "she", "her", "it", "they", "their",
+  "i", "im", "i'm", "me", "my", "we", "our", "you", "your", "he", "his", "she", "her", "it", "they", "their",
   "what", "which", "who", "whom", "this", "that", "these", "those",
   "am", "is", "are", "was", "were", "be", "been", "have", "has", "had", "do", "does", "did", "can", "could", "will", "would",
   "a", "an", "the", "and", "but", "if", "or", "because", "as", "of", "at", "by", "for", "with", "about", 
-  "to", "from", "in", "out", "on", "off", "over", "under", "where", "when", "why", "how", "all", "any", "some",
+  "to", "from", "in", "out", "on", "off", "over", "under", "where", "when", "why", "how", "all", "any", "some", "up", "coming",
   "study", "course", "subject", "degree", "university", "unimelb", "melbourne", "student", "go"
 ]);
 
-function getScore(query, text) {
+function getScore(query, title) {
   const rawQWords = query.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(Boolean);
   const meaningfulQWords = rawQWords.filter(w => !stopWords.has(w));
-  
-  // If user only typed stop words, fall back to the raw words
   const searchWords = meaningfulQWords.length > 0 ? meaningfulQWords : rawQWords;
 
-  const textLower = text.toLowerCase();
+  const titleLower = title.toLowerCase();
+  const contentLower = (contentMapping[title] || "").toLowerCase();
   let score = 0;
 
-  // Massive bonus if the exact query phrase is found
-  if (textLower.includes(query.toLowerCase())) {
-    score += 150;
-  }
+  // Exact phrase bonuses
+  if (titleLower.includes(query.toLowerCase())) score += 150;
+  if (contentLower.includes(query.toLowerCase())) score += 50;
 
   for (let qw of searchWords) {
-    // Exact word boundary match
     const exactWordRegex = new RegExp(`\\b${qw}\\b`, 'i');
-    if (exactWordRegex.test(textLower)) {
-      score += 40;
-    } else if (textLower.includes(qw)) {
-      score += 10;
-    }
+    
+    // Title matching
+    if (exactWordRegex.test(titleLower)) score += 40;
+    else if (titleLower.includes(qw)) score += 10;
+
+    // Content matching
+    if (exactWordRegex.test(contentLower)) score += 20;
+    else if (contentLower.includes(qw)) score += 5;
 
     // Synonym checking
     if (synonymMap[qw]) {
       for (let syn of synonymMap[qw]) {
         const synRegex = new RegExp(`\\b${syn}\\b`, 'i');
-        if (synRegex.test(textLower)) {
-          score += 25; // High value for hitting a related core concept
-        } else if (textLower.includes(syn)) {
-          score += 5;
-        }
+        if (synRegex.test(titleLower)) score += 30; 
+        else if (synRegex.test(contentLower)) score += 15;
       }
     }
   }
@@ -414,8 +467,10 @@ function getScore(query, text) {
 function getTopMatches(query, limit = 5) {
   if (!query.trim()) return [];
   
+  // RELEVANCE THRESHOLD: Must score > 20 to be considered a valid match.
+  // This prevents unrelated items from showing up just to fill a quota of 5.
   const scoredL2 = L2.map(item => ({ item, score: getScore(query, item) }))
-                     .filter(x => x.score > 0)
+                     .filter(x => x.score > 20) 
                      .sort((a, b) => b.score - a.score);
 
   return scoredL2.slice(0, limit).map(x => x.item);
@@ -429,13 +484,11 @@ const dropdown = document.getElementById("dropdown");
 const results = document.getElementById("results");
 const button = document.getElementById("searchBtn");
 
-let currentResults = [];
-
 /* -------------------------
    DROPDOWN
 ------------------------- */
 function updateDropdown(query) {
-  currentResults = getTopMatches(query);
+  const currentResults = getTopMatches(query);
 
   if (!query || currentResults.length === 0) {
     dropdown.innerHTML = "";
@@ -464,7 +517,7 @@ function renderResults(query) {
     return;
   }
 
-  // Derive unique L1 categories from the matched L2s
+  // Derive unique L1 categories ONLY for the matched L2s
   const l1Set = new Set(matchedL2.map(q => mapping[q]));
   const matchedL1 = [...l1Set];
 
