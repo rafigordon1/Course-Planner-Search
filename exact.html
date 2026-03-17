@@ -1,137 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Course Planner</title>
 
 <style>
-  :root {
-    --blue: #094183;
-    --light-gray: #f5f7fa;
-    --border: #d6dbe1;
-  }
+:root {
+  --blue: #041a3b;
+  --accent: #0bb3d6;
+  --border: #d6dbe1;
+  --light: #f5f7fa;
+}
 
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: var(--light-gray);
-    color: #222;
-  }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--light);
+}
 
-  header {
-    background: var(--blue);
-    color: white;
-    padding: 32px 20px;
-    font-size: 2rem;
-    font-weight: bold;
-  }
+/* HERO */
+.hero {
+  background: var(--blue);
+  color: white;
+  padding: 60px 20px 40px;
+}
 
-  .container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 0 20px;
-  }
+.hero h1 {
+  max-width: 1000px;
+  margin: 0 auto 20px;
+  font-size: 2.8rem;
+}
 
-  .search-wrapper {
-    position: relative;
-  }
+/* SEARCH BAR */
+.search-bar {
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+}
 
-  input {
-    width: 100%;
-    padding: 14px;
-    font-size: 1rem;
-    border: 2px solid var(--border);
-    border-radius: 4px;
-    outline: none;
-  }
+.search-bar input {
+  flex: 1;
+  padding: 16px;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+}
 
-  input:focus {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(9,65,131,0.2);
-  }
+.search-bar button {
+  background: var(--accent);
+  border: none;
+  padding: 0 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
 
-  .dropdown {
-    position: absolute;
-    width: 100%;
-    background: white;
-    border: 1px solid var(--border);
-    border-top: none;
-    max-height: 250px;
-    overflow-y: auto;
-    z-index: 10;
-  }
+.search-bar button:hover {
+  background: #099bb8;
+}
 
-  .dropdown div {
-    padding: 12px;
-    cursor: pointer;
-  }
+/* SEARCH ICON */
+.search-icon {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #041a3b;
+  border-radius: 50%;
+  position: relative;
+}
+.search-icon::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 2px;
+  background: #041a3b;
+  bottom: -6px;
+  right: -6px;
+  transform: rotate(45deg);
+}
 
-  .dropdown div:hover,
-  .dropdown .active {
-    background: #eef3f8;
-  }
+/* DROPDOWN */
+.dropdown {
+  max-width: 1000px;
+  margin: auto;
+  background: white;
+  border: 1px solid var(--border);
+}
 
-  .results {
-    margin-top: 30px;
-  }
+.dropdown div {
+  padding: 12px;
+  cursor: pointer;
+}
 
-  .top-links a {
-    display: block;
-    margin-bottom: 10px;
-    color: var(--blue);
-    text-decoration: none;
-    font-weight: 500;
-  }
+.dropdown div:hover,
+.active {
+  background: #eef3f8;
+}
 
-  .top-links a:hover {
-    text-decoration: underline;
-  }
+/* RESULTS */
+.container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 16px;
-    margin-top: 20px;
-  }
+/* L2 LINKS */
+.top-links a {
+  display: block;
+  margin-bottom: 10px;
+  color: #094183;
+  font-weight: 600;
+  text-decoration: none;
+}
 
-  .card {
-    background: white;
-    border: 1px solid var(--border);
-    padding: 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
+.top-links a:hover {
+  text-decoration: underline;
+}
 
-  .card:hover {
-    border-color: var(--blue);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  }
+/* L1 CARDS */
+.grid {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
 
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.card:hover {
+  border-color: #094183;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
 </style>
 </head>
 
 <body>
 
-<header>Course Planner</header>
+<div class="hero">
+  <h1>Course Planner</h1>
 
-<div class="container">
-
-  <div class="search-wrapper">
-    <input 
-      type="text" 
-      id="search" 
-      placeholder="Search for help..."
-      role="combobox"
-      aria-expanded="false"
-      aria-controls="dropdown"
-    />
-    <div id="dropdown" class="dropdown" role="listbox"></div>
+  <div class="search-bar">
+    <input id="search" placeholder="Search by keywords">
+    <button id="searchBtn">
+      <div class="search-icon"></div>
+    </button>
   </div>
 
-  <div id="results" class="results"></div>
+  <div id="dropdown" class="dropdown"></div>
+</div>
 
+<div class="container">
+  <div id="results"></div>
 </div>
 
 <script>
@@ -147,144 +173,103 @@ const L1 = [
 ];
 
 const L2 = [
-"What should I do if my student visa isn’t granted in time to start my course?",
 "How do I plan my first year and enrol before semester starts?",
 "What is the Student Learning Entitlement (SLE)?",
-"How is my Weighted Average Mark (WAM) calculated and what counts toward it?",
-"What are the entry requirements for my course, and are there guaranteed entry pathways?",
-"What is Graduate Access Melbourne (GAM), and how do I apply?",
+"How is my Weighted Average Mark (WAM) calculated?",
+"What are the entry requirements for my course?",
 "Who can I speak to about graduate coursework study options?",
-"Do I still need to re-enrol if I’ve applied to transfer courses?",
-"How do I transfer from one University of Melbourne degree to another?",
-"What should I do about my summer subject if I’m transferring courses?",
-"Can someone review my course plan in My Course Planner?",
+"How do I transfer courses?",
 "What happens if I withdraw from a subject?",
-"Can I get advice on the subjects I’ve chosen this semester?",
-"How do I take part in Melbourne Plus activities?",
-"Can I get help with my Skills Towards Employment Program (STEP) subject?",
-"What internship subjects can I take, and how do I apply?",
-"Can someone help me understand my subject prerequisites?",
-"What are my part-time study options, and will it affect my course plan?",
-"What do I need to know about changing my study load (reducing or overloading)?",
+"Can I get advice on subjects this semester?",
+"How do I take part in Melbourne Plus?",
+"What internship subjects can I take?",
+"Can someone help me understand prerequisites?",
+"How do I change my study load?",
 "Am I eligible for an early exit award?",
-"Can someone help me understand my course structure and course rules?",
-"What do I need to know before taking a Leave of Absence?",
-"Am I on track to complete my degree?",
-"How do I plan or change my major, minor, or specialisation?",
-"What do I need to know before withdrawing from my course?",
-"Am I eligible for a concurrent diploma, and how do I add one to my course?",
-"Can I apply for Honours before finishing my concurrent diploma?",
-"Can I defer my course, and where can I get advice before deciding?",
+"How do I plan my major or minor?",
 "How do I withdraw from my course?",
 "Why can’t I enrol in a subject?",
-"How do I make changes to my Study Plan or subjects?",
-"Why can’t I enrol in a quota subject?",
-"What should I do if I’ve been removed from my course because I didn’t enrol or re-enrol correctly?",
-"What do I need to do to re-enrol, and what happens if I miss the deadline?",
-"What is a concurrent diploma, and how does it work?",
-"How do I access ongoing support, including an Academic Adjustment Plan (AAP)?",
-"What support can I get if circumstances affect my assessments?",
+"How do I change my Study Plan?",
+"What support can I get for assessments?",
 "What should I do if I fail a subject?",
-"Why can’t I see my final results after the results release date?",
-"What options do I have if I miss, fail, or am worried about an exam?",
-"How do I access a faculty-managed supplementary exam?",
-"Can I apply to extend my Maximum Course Length before a CAPC meeting?",
-"What is Final Subject Assessment (FSA), and how does it work?",
-"Can I change my entry point in a graduate course?",
-"How do I plan my course if I have advanced standing (credit)?",
-"Am I eligible for advanced standing (credit) in my course?",
-"Can I re-apply for advanced standing (credit) that I previously removed?",
-"Can I enrol in subjects while my advanced standing (credit) application is being assessed?",
-"Can I get an exemption for my Discovery subject?",
-"Can I remove advanced standing (credit) that’s already been applied to my course?",
-"Can I change how a completed subject counts across my Bachelor and concurrent diploma?",
-"What do I need to know about going on exchange?",
-"Do course progression rules still apply while I’m on exchange?",
-"What do I need to know about going on exchange in my final semester?",
-"Can I study overseas as part of my course?",
-"How will studying on exchange affect my WAM?",
-"How do I know which exchange subjects will count for credit toward my degree?"
+"What options do I have if I miss an exam?",
+"How do I access supplementary exams?",
+"How do I plan my course with credit?",
+"Am I eligible for advanced standing?",
+"Can I study overseas?",
+"How will exchange affect my WAM?"
 ];
 
 const input = document.getElementById("search");
 const dropdown = document.getElementById("dropdown");
 const results = document.getElementById("results");
+const button = document.getElementById("searchBtn");
 
-let activeIndex = -1;
 let currentResults = [];
+let activeIndex = -1;
 
-function score(item, queryWords) {
-  let text = item.toLowerCase();
-  let score = 0;
+/* SMART MATCHING */
+function score(text, words) {
+  text = text.toLowerCase();
+  let s = 0;
 
-  queryWords.forEach(word => {
-    if (text.includes(word)) score += 2;
-    if (text.startsWith(word)) score += 3;
+  words.forEach(w => {
+    if (text.includes(w)) s += 2;
+    if (text.startsWith(w)) s += 3;
   });
 
-  return score;
+  return s;
 }
 
-function searchData(data, query) {
+function search(data, query) {
   const words = query.toLowerCase().split(" ").filter(Boolean);
 
   return data
     .map(item => ({ item, score: score(item, words) }))
     .filter(x => x.score > 0)
-    .sort((a, b) => b.score - a.score)
+    .sort((a,b) => b.score - a.score)
     .map(x => x.item);
 }
 
-function handleSearch(query) {
+/* DROPDOWN */
+function updateDropdown(query) {
   if (!query) {
     dropdown.innerHTML = "";
     return;
   }
 
-  let matches = searchData(L2, query);
+  let matches = search(L2, query);
+  if (!matches.length) matches = search(L1, query);
 
-  if (matches.length === 0) {
-    matches = searchData(L1, query);
-  }
+  currentResults = matches.slice(0,5);
 
-  currentResults = matches.slice(0, 5);
-  renderDropdown();
+  dropdown.innerHTML = currentResults
+    .map((r,i) => `<div data-index="${i}">${r}</div>`)
+    .join("");
 }
 
-function renderDropdown() {
-  dropdown.innerHTML = "";
-  activeIndex = -1;
-
-  currentResults.forEach((item, i) => {
-    const div = document.createElement("div");
-    div.textContent = item;
-    div.setAttribute("role", "option");
-
-    div.onclick = () => {
-      input.value = item;
-      dropdown.innerHTML = "";
-    };
-
-    dropdown.appendChild(div);
-  });
-}
-
+/* RESULTS VIEW */
 function renderResults(query) {
-  const l2Matches = searchData(L2, query).slice(0, 3);
-  const l1Matches = searchData(L1, query);
+  const l2 = search(L2, query).slice(0,5);
+  const l1 = search(L1, query); // ONLY relevant
 
   results.innerHTML = `
     <div class="top-links">
-      ${l2Matches.map(x => `<a href="#">${x}</a>`).join("")}
+      ${l2.map(x => `<a href="#">${x}</a>`).join("")}
     </div>
+
     <div class="grid">
-      ${l1Matches.map(x => `<div class="card">${x}</div>`).join("")}
+      ${l1.map(x => `<div class="card">${x}</div>`).join("")}
     </div>
   `;
 }
 
-input.addEventListener("input", e => {
-  handleSearch(e.target.value);
+/* EVENTS */
+input.addEventListener("input", e => updateDropdown(e.target.value));
+
+button.addEventListener("click", () => {
+  renderResults(input.value);
+  dropdown.innerHTML = "";
 });
 
 input.addEventListener("keydown", e => {
@@ -295,11 +280,8 @@ input.addEventListener("keydown", e => {
   } else if (e.key === "ArrowUp") {
     activeIndex = (activeIndex - 1 + items.length) % items.length;
   } else if (e.key === "Enter") {
-    if (activeIndex >= 0) {
-      input.value = items[activeIndex].textContent;
-      dropdown.innerHTML = "";
-    }
     renderResults(input.value);
+    dropdown.innerHTML = "";
     return;
   }
 
@@ -307,8 +289,9 @@ input.addEventListener("keydown", e => {
   if (items[activeIndex]) items[activeIndex].classList.add("active");
 });
 
+/* CLICK OUTSIDE */
 document.addEventListener("click", e => {
-  if (!e.target.closest(".search-wrapper")) {
+  if (!e.target.closest(".search-bar")) {
     dropdown.innerHTML = "";
   }
 });
