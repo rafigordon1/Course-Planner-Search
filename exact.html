@@ -1,304 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unimelb Style Search Component</title>
-    <style>
-        /* Unimelb Design System Emulation */
-        :root {
-            --unimelb-blue: #094183;
-            --unimelb-blue-hover: #0b4b96;
-            --focus-ring: #005A9C;
-            --text-main: #333333;
-            --bg-light: #f5f5f5;
-            --border-color: #cccccc;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Course Planner</title>
 
-        body {
-            font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            padding-top: 100px;
-            margin: 0;
-        }
+<style>
+  :root {
+    --blue: #094183;
+    --light-gray: #f5f7fa;
+    --border: #d6dbe1;
+  }
 
-        .search-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-        }
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: var(--light-gray);
+    color: #222;
+  }
 
-        .search-label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 1.1rem;
-            color: var(--unimelb-blue);
-        }
+  header {
+    background: var(--blue);
+    color: white;
+    padding: 32px 20px;
+    font-size: 2rem;
+    font-weight: bold;
+  }
 
-        /* Input Styling */
-        .search-input {
-            width: 100%;
-            padding: 16px;
-            font-size: 1rem;
-            border: 2px solid var(--unimelb-blue);
-            border-radius: 4px;
-            box-sizing: border-box;
-            transition: all 0.2s ease-in-out;
-            color: var(--text-main);
-        }
+  .container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
 
-        .search-input:focus {
-            outline: none;
-            border-color: var(--focus-ring);
-            box-shadow: 0 0 0 4px rgba(0, 90, 156, 0.2);
-        }
+  .search-wrapper {
+    position: relative;
+  }
 
-        .search-input::placeholder {
-            color: #777;
-        }
+  input {
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    outline: none;
+  }
 
-        /* Dropdown Styling */
-        .search-results {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid var(--border-color);
-            border-top: none;
-            border-radius: 0 0 4px 4px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            z-index: 10;
-            display: none; /* Hidden by default */
-        }
+  input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(9,65,131,0.2);
+  }
 
-        .search-results.active {
-            display: block;
-        }
+  .dropdown {
+    position: absolute;
+    width: 100%;
+    background: white;
+    border: 1px solid var(--border);
+    border-top: none;
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 10;
+  }
 
-        .search-results li {
-            padding: 12px 16px;
-            border-bottom: 1px solid #eeeeee;
-            cursor: pointer;
-            font-size: 0.95rem;
-            line-height: 1.4;
-            transition: background-color 0.2s;
-        }
+  .dropdown div {
+    padding: 12px;
+    cursor: pointer;
+  }
 
-        .search-results li:last-child {
-            border-bottom: none;
-        }
+  .dropdown div:hover,
+  .dropdown .active {
+    background: #eef3f8;
+  }
 
-        .search-results li:hover, .search-results li:focus {
-            background-color: #f0f4f8;
-            color: var(--unimelb-blue);
-            outline: none;
-        }
+  .results {
+    margin-top: 30px;
+  }
 
-        .search-results .no-results {
-            color: #666;
-            cursor: default;
-            font-style: italic;
-        }
-        
-        .search-results .no-results:hover {
-            background-color: white;
-            color: #666;
-        }
-    </style>
+  .top-links a {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .top-links a:hover {
+    text-decoration: underline;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .card:hover {
+    border-color: var(--blue);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  }
+
+</style>
 </head>
+
 <body>
 
-    <div class="search-container">
-        <label for="faq-search" class="search-label">How can we help you?</label>
-        <input 
-            type="text" 
-            id="faq-search" 
-            class="search-input" 
-            placeholder="Search for subjects, exams, enrollments..." 
-            autocomplete="off"
-        >
-        <ul id="search-dropdown" class="search-results"></ul>
+<header>Course Planner</header>
+
+<div class="container">
+
+  <div class="search-wrapper">
+    <input 
+      type="text" 
+      id="search" 
+      placeholder="Search for help..."
+      role="combobox"
+      aria-expanded="false"
+      aria-controls="dropdown"
+    />
+    <div id="dropdown" class="dropdown" role="listbox"></div>
+  </div>
+
+  <div id="results" class="results"></div>
+
+</div>
+
+<script>
+const L1 = [
+"I’m a new student and need help getting started",
+"I need support with exams, assessments, results, or ongoing circumstances affecting my study",
+"I’m considering another course or graduate study",
+"I need help choosing, changing, or planning my subjects",
+"I need to understand my course structure, majors/minors and study load",
+"I need help enrolling and managing my study plan for my course or concurrent diploma",
+"I have questions about credit from my previous study",
+"I want to study overseas as part of my course"
+];
+
+const L2 = [
+"What should I do if my student visa isn’t granted in time to start my course?",
+"How do I plan my first year and enrol before semester starts?",
+"What is the Student Learning Entitlement (SLE)?",
+"How is my Weighted Average Mark (WAM) calculated and what counts toward it?",
+"What are the entry requirements for my course, and are there guaranteed entry pathways?",
+"What is Graduate Access Melbourne (GAM), and how do I apply?",
+"Who can I speak to about graduate coursework study options?",
+"Do I still need to re-enrol if I’ve applied to transfer courses?",
+"How do I transfer from one University of Melbourne degree to another?",
+"What should I do about my summer subject if I’m transferring courses?",
+"Can someone review my course plan in My Course Planner?",
+"What happens if I withdraw from a subject?",
+"Can I get advice on the subjects I’ve chosen this semester?",
+"How do I take part in Melbourne Plus activities?",
+"Can I get help with my Skills Towards Employment Program (STEP) subject?",
+"What internship subjects can I take, and how do I apply?",
+"Can someone help me understand my subject prerequisites?",
+"What are my part-time study options, and will it affect my course plan?",
+"What do I need to know about changing my study load (reducing or overloading)?",
+"Am I eligible for an early exit award?",
+"Can someone help me understand my course structure and course rules?",
+"What do I need to know before taking a Leave of Absence?",
+"Am I on track to complete my degree?",
+"How do I plan or change my major, minor, or specialisation?",
+"What do I need to know before withdrawing from my course?",
+"Am I eligible for a concurrent diploma, and how do I add one to my course?",
+"Can I apply for Honours before finishing my concurrent diploma?",
+"Can I defer my course, and where can I get advice before deciding?",
+"How do I withdraw from my course?",
+"Why can’t I enrol in a subject?",
+"How do I make changes to my Study Plan or subjects?",
+"Why can’t I enrol in a quota subject?",
+"What should I do if I’ve been removed from my course because I didn’t enrol or re-enrol correctly?",
+"What do I need to do to re-enrol, and what happens if I miss the deadline?",
+"What is a concurrent diploma, and how does it work?",
+"How do I access ongoing support, including an Academic Adjustment Plan (AAP)?",
+"What support can I get if circumstances affect my assessments?",
+"What should I do if I fail a subject?",
+"Why can’t I see my final results after the results release date?",
+"What options do I have if I miss, fail, or am worried about an exam?",
+"How do I access a faculty-managed supplementary exam?",
+"Can I apply to extend my Maximum Course Length before a CAPC meeting?",
+"What is Final Subject Assessment (FSA), and how does it work?",
+"Can I change my entry point in a graduate course?",
+"How do I plan my course if I have advanced standing (credit)?",
+"Am I eligible for advanced standing (credit) in my course?",
+"Can I re-apply for advanced standing (credit) that I previously removed?",
+"Can I enrol in subjects while my advanced standing (credit) application is being assessed?",
+"Can I get an exemption for my Discovery subject?",
+"Can I remove advanced standing (credit) that’s already been applied to my course?",
+"Can I change how a completed subject counts across my Bachelor and concurrent diploma?",
+"What do I need to know about going on exchange?",
+"Do course progression rules still apply while I’m on exchange?",
+"What do I need to know about going on exchange in my final semester?",
+"Can I study overseas as part of my course?",
+"How will studying on exchange affect my WAM?",
+"How do I know which exchange subjects will count for credit toward my degree?"
+];
+
+const input = document.getElementById("search");
+const dropdown = document.getElementById("dropdown");
+const results = document.getElementById("results");
+
+let activeIndex = -1;
+let currentResults = [];
+
+function score(item, queryWords) {
+  let text = item.toLowerCase();
+  let score = 0;
+
+  queryWords.forEach(word => {
+    if (text.includes(word)) score += 2;
+    if (text.startsWith(word)) score += 3;
+  });
+
+  return score;
+}
+
+function searchData(data, query) {
+  const words = query.toLowerCase().split(" ").filter(Boolean);
+
+  return data
+    .map(item => ({ item, score: score(item, words) }))
+    .filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map(x => x.item);
+}
+
+function handleSearch(query) {
+  if (!query) {
+    dropdown.innerHTML = "";
+    return;
+  }
+
+  let matches = searchData(L2, query);
+
+  if (matches.length === 0) {
+    matches = searchData(L1, query);
+  }
+
+  currentResults = matches.slice(0, 5);
+  renderDropdown();
+}
+
+function renderDropdown() {
+  dropdown.innerHTML = "";
+  activeIndex = -1;
+
+  currentResults.forEach((item, i) => {
+    const div = document.createElement("div");
+    div.textContent = item;
+    div.setAttribute("role", "option");
+
+    div.onclick = () => {
+      input.value = item;
+      dropdown.innerHTML = "";
+    };
+
+    dropdown.appendChild(div);
+  });
+}
+
+function renderResults(query) {
+  const l2Matches = searchData(L2, query).slice(0, 3);
+  const l1Matches = searchData(L1, query);
+
+  results.innerHTML = `
+    <div class="top-links">
+      ${l2Matches.map(x => `<a href="#">${x}</a>`).join("")}
     </div>
+    <div class="grid">
+      ${l1Matches.map(x => `<div class="card">${x}</div>`).join("")}
+    </div>
+  `;
+}
 
-    <script>
-        // --- Data Sources ---
-        const l1Data = [
-            "I’m a new student and need help getting started",
-            "I need support with exams, assessments, results, or ongoing circumstances affecting my study",
-            "I’m considering another course or graduate study",
-            "I need help choosing, changing, or planning my subjects",
-            "I need to understand my course structure, majors/minors and study load",
-            "I need help enrolling and managing my study plan for my course or concurrent diploma",
-            "I have questions about credit from my previous study",
-            "I want to study overseas as part of my course"
-        ];
+input.addEventListener("input", e => {
+  handleSearch(e.target.value);
+});
 
-        const l2Data = [
-            "What should I do if my student visa isn’t granted in time to start my course?",
-            "How do I plan my first year and enrol before semester starts?",
-            "What is the Student Learning Entitlement (SLE)?",
-            "How is my Weighted Average Mark (WAM) calculated and what counts toward it?",
-            "What are the entry requirements for my course, and are there guaranteed entry pathways?",
-            "What is Graduate Access Melbourne (GAM), and how do I apply?",
-            "Who can I speak to about graduate coursework study options?",
-            "Do I still need to re‑enrol if I’ve applied to transfer courses?",
-            "How do I transfer from one University of Melbourne degree to another?",
-            "What should I do about my summer subject if I’m transferring courses?",
-            "Can someone review my course plan in My Course Planner?",
-            "What happens if I withdraw from a subject?",
-            "Can I get advice on the subjects I’ve chosen this semester?",
-            "How do I take part in Melbourne Plus activities?",
-            "Can I get help with my Skills Towards Employment Program (STEP) subject?",
-            "What internship subjects can I take, and how do I apply?",
-            "Can someone help me understand my subject prerequisites?",
-            "What are my part‑time study options, and will it affect my course plan?",
-            "What do I need to know about changing my study load (reducing or overloading)?",
-            "Am I eligible for an early exit award?",
-            "Can someone help me understand my course structure and course rules?",
-            "What do I need to know before taking a Leave of Absence?",
-            "Am I on track to complete my degree?",
-            "How do I plan or change my major, minor, or specialisation?",
-            "What do I need to know before withdrawing from my course?",
-            "Am I eligible for a concurrent diploma, and how do I add one to my course?",
-            "Can I apply for Honours before finishing my concurrent diploma?",
-            "Can I defer my course, and where can I get advice before deciding?",
-            "How do I withdraw from my course?",
-            "Why can’t I enrol in a subject?",
-            "How do I make changes to my Study Plan or subjects?",
-            "Why can’t I enrol in a quota subject?",
-            "What should I do if I’ve been removed from my course because I didn’t enrol or re‑enrol correctly?",
-            "What do I need to do to re‑enrol, and what happens if I miss the deadline?",
-            "What is a concurrent diploma, and how does it work?",
-            "How do I access ongoing support, including an Academic Adjustment Plan (AAP)?",
-            "What support can I get if circumstances affect my assessments?",
-            "What should I do if I fail a subject?",
-            "Why can’t I see my final results after the results release date?",
-            "What options do I have if I miss, fail, or am worried about an exam?",
-            "How do I access a faculty‑managed supplementary exam?",
-            "Can I apply to extend my Maximum Course Length before a CAPC meeting?",
-            "What is Final Subject Assessment (FSA), and how does it work?",
-            "Can I change my entry point in a graduate course?",
-            "How do I plan my course if I have advanced standing (credit)?",
-            "Am I eligible for advanced standing (credit) in my course?",
-            "Can I re‑apply for advanced standing (credit) that I previously removed?",
-            "Can I enrol in subjects while my advanced standing (credit) application is being assessed?",
-            "Can I get an exemption for my Discovery subject?",
-            "Can I remove advanced standing (credit) that’s already been applied to my course?",
-            "Can I change how a completed subject counts across my Bachelor and concurrent diploma?",
-            "What do I need to know about going on exchange?",
-            "Do course progression rules still apply while I’m on exchange?",
-            "What do I need to know about going on exchange in my final semester?",
-            "Can I study overseas as part of my course?",
-            "How will studying on exchange affect my WAM?",
-            "How do I know which exchange subjects will count for credit toward my degree?"
-        ];
+input.addEventListener("keydown", e => {
+  const items = dropdown.children;
 
-        // --- DOM Elements ---
-        const searchInput = document.getElementById('faq-search');
-        const searchDropdown = document.getElementById('search-dropdown');
+  if (e.key === "ArrowDown") {
+    activeIndex = (activeIndex + 1) % items.length;
+  } else if (e.key === "ArrowUp") {
+    activeIndex = (activeIndex - 1 + items.length) % items.length;
+  } else if (e.key === "Enter") {
+    if (activeIndex >= 0) {
+      input.value = items[activeIndex].textContent;
+      dropdown.innerHTML = "";
+    }
+    renderResults(input.value);
+    return;
+  }
 
-        // --- Search Logic ---
-        function performSearch(query, dataset) {
-            const lowerQuery = query.toLowerCase();
-            
-            // Filter: Must contain the substring
-            let matches = dataset.filter(item => item.toLowerCase().includes(lowerQuery));
+  [...items].forEach(el => el.classList.remove("active"));
+  if (items[activeIndex]) items[activeIndex].classList.add("active");
+});
 
-            // Sort: Relevance (Starts with query > Contains query)
-            matches.sort((a, b) => {
-                const aStarts = a.toLowerCase().startsWith(lowerQuery);
-                const bStarts = b.toLowerCase().startsWith(lowerQuery);
-                
-                if (aStarts && !bStarts) return -1;
-                if (!aStarts && bStarts) return 1;
-                return 0;
-            });
+document.addEventListener("click", e => {
+  if (!e.target.closest(".search-wrapper")) {
+    dropdown.innerHTML = "";
+  }
+});
+</script>
 
-            // Limit to max 5 results
-            return matches.slice(0, 5);
-        }
-
-        function renderDropdown(results, query) {
-            searchDropdown.innerHTML = ''; // Clear previous
-
-            if (query.length === 0) {
-                searchDropdown.classList.remove('active');
-                return;
-            }
-
-            if (results.length === 0) {
-                const li = document.createElement('li');
-                li.className = 'no-results';
-                li.textContent = 'No matching questions found.';
-                searchDropdown.appendChild(li);
-            } else {
-                results.forEach(result => {
-                    const li = document.createElement('li');
-                    li.textContent = result;
-                    li.setAttribute('tabindex', '0'); // Accessibility
-                    
-                    // Click handler (you can replace this with actual navigation logic)
-                    li.addEventListener('click', () => {
-                        searchInput.value = result;
-                        searchDropdown.classList.remove('active');
-                    });
-
-                    // Keyboard selection (Enter key)
-                    li.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter') {
-                            searchInput.value = result;
-                            searchDropdown.classList.remove('active');
-                        }
-                    });
-
-                    searchDropdown.appendChild(li);
-                });
-            }
-
-            searchDropdown.classList.add('active');
-        }
-
-        // --- Event Listeners ---
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.trim();
-
-            if (!query) {
-                renderDropdown([], "");
-                return;
-            }
-
-            // 1. Prioritize L2 Data
-            let finalResults = performSearch(query, l2Data);
-
-            // 2. If exactly zero matches in L2, fallback to L1 Data
-            if (finalResults.length === 0) {
-                finalResults = performSearch(query, l1Data);
-            }
-
-            renderDropdown(finalResults, query);
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
-                searchDropdown.classList.remove('active');
-            }
-        });
-        
-        // Re-open dropdown when clicking back into input if there's text
-        searchInput.addEventListener('focus', () => {
-            if (searchInput.value.trim().length > 0 && searchDropdown.children.length > 0) {
-                searchDropdown.classList.add('active');
-            }
-        });
-    </script>
 </body>
 </html>
