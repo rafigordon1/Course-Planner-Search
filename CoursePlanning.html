@@ -7,26 +7,16 @@
     <style>
         :root {
             --primary-blue: #0A3B7C;
-            --secondary-blue: #155196;
             --active-tab-blue: #5B8CDE;
             --hover-blue: #3E92CC;
             --bg-grey: #F5F7FA;
-            --text-main: #333333;
             --border-grey: #D1D5DB;
             --accent-teal: #63C7B2;
         }
 
-        * {
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { box-sizing: border-box; font-family: sans-serif; }
 
-        body {
-            margin: 0;
-            background-color: white;
-            color: var(--text-main);
-            line-height: 1.5;
-        }
+        body { margin: 0; background-color: white; color: #333; }
 
         /* Header & Search Area */
         .header-container {
@@ -35,301 +25,248 @@
             padding: 60px 20px 40px 20px;
         }
 
-        .header-content {
-            max-width: 1000px;
+        .container {
+            max-width: 1000px; /* Aligning results and search bar */
             margin: 0 auto;
         }
 
-        h1 {
-            font-size: 26px;
-            font-weight: 500;
-            margin-bottom: 40px;
-            margin-top: 0;
-        }
+        h1 { font-size: 26px; font-weight: 500; margin: 0 0 40px 0; }
 
-        .search-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            gap: 25px;
-        }
+        .row { display: flex; align-items: flex-start; margin-bottom: 30px; gap: 25px; }
 
-        .label-text {
-            min-width: 100px;
-            font-size: 18px;
-            font-weight: 400;
-        }
+        .label { min-width: 100px; font-size: 18px; padding-top: 12px; }
 
-        .search-input-group {
-            display: flex;
-            flex-grow: 1;
-            border-radius: 4px;
-            overflow: hidden;
-        }
+        .search-group { display: flex; flex-grow: 1; border-radius: 4px; overflow: hidden; }
 
-        .search-input-group input {
-            flex-grow: 1;
-            padding: 16px 20px;
-            font-size: 18px;
-            border: none;
-            outline: none;
-        }
+        .search-group input { flex-grow: 1; padding: 16px 20px; font-size: 18px; border: none; outline: none; }
 
-        .search-input-group button {
-            background-color: var(--active-tab-blue);
-            color: white;
-            border: none;
-            padding: 0 45px;
-            font-size: 18px;
-            cursor: pointer;
-        }
+        .search-group button { background-color: var(--active-tab-blue); color: white; border: none; padding: 0 45px; font-size: 18px; cursor: pointer; }
 
-        /* Tabs - Improved Alignment and De-cluttering */
-        .filter-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 25px;
-        }
-
-        .tabs-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px; /* Increased gap to prevent clutter */
-            flex-grow: 1;
-        }
+        /* Tabs Section */
+        .tabs-wrapper { display: flex; flex-wrap: wrap; gap: 10px; flex-grow: 1; }
 
         .tab {
             background-color: white;
             color: var(--primary-blue);
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 4px;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
             cursor: pointer;
             position: relative;
-            border: 1px solid transparent;
+            min-height: 45px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            min-height: 48px;
         }
 
-        .tab.active {
-            background-color: var(--active-tab-blue);
-            color: white;
-        }
+        .tab.active { background-color: var(--active-tab-blue); color: white; }
 
         .tab-badge {
             position: absolute;
-            top: -10px;
+            top: -8px;
             right: 10px;
-            background-color: white;
+            background: white;
             color: var(--primary-blue);
-            font-size: 11px;
-            padding: 2px 8px;
+            font-size: 10px;
+            padding: 2px 6px;
             border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             border: 1px solid var(--border-grey);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .tab.active .tab-badge {
-            background-color: #E2E8F0;
-        }
+        /* Results Area - Aligned to Search Bar */
+        .results-section { padding: 40px 20px; }
 
-        /* Main Content */
-        .main-content {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+        .results-meta { font-size: 15px; color: #666; margin-bottom: 25px; }
 
-        .results-info {
-            font-size: 15px;
-            color: #666;
-            margin-bottom: 25px;
-        }
+        .pagination { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
 
-        /* Pagination UI - Matching Screenshot */
-        .pagination-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
-
-        .page-selector {
+        .page-select {
             display: flex;
             align-items: center;
             border: 1px solid var(--primary-blue);
             border-radius: 4px;
-            padding: 5px 10px;
-            cursor: pointer;
+            padding: 4px 12px;
             background: white;
         }
 
-        .page-selector span {
-            margin-right: 15px;
-            color: var(--primary-blue);
-            font-weight: 500;
-        }
-
-        .page-selector svg {
-            fill: var(--primary-blue);
-        }
-
-        /* Result Cards */
         .result-card {
             border: 1px solid var(--border-grey);
             border-left: 6px solid var(--accent-teal);
             padding: 30px;
             margin-bottom: 20px;
             border-radius: 2px;
-            background: white;
         }
 
         .result-title {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 700;
             color: black;
             margin-bottom: 12px;
-            cursor: pointer;
             text-decoration: none;
             display: inline-block;
         }
 
-        .result-title:hover {
-            color: var(--hover-blue);
-            text-decoration: underline;
-        }
+        .result-title:hover { color: var(--hover-blue); text-decoration: underline; cursor: pointer; }
 
-        .result-answer {
-            color: #4B5563;
-            font-size: 16px;
-        }
-
-        @media (max-width: 768px) {
-            .search-row, .filter-row {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .tab {
-                flex: 1 1 45%;
-            }
-        }
+        .result-ans { color: #4B5563; font-size: 16px; line-height: 1.6; }
     </style>
 </head>
 <body>
 
     <div class="header-container">
-        <div class="header-content">
+        <div class="container">
             <h1>The University of Melbourne’s official source of course and subject information</h1>
-            
-            <div class="search-row">
-                <div class="label-text">Search for</div>
-                <div class="search-input-group">
+            <div class="row">
+                <div class="label">Search for</div>
+                <div class="search-group">
                     <input type="text" id="searchInput" placeholder="Courses, subjects or keywords">
                     <button id="searchBtn">Search</button>
                 </div>
             </div>
-
-            <div class="filter-row">
-                <div class="label-text">Show only</div>
-                <div class="tabs-wrapper" id="tabsContainer">
-                    </div>
+            <div class="row">
+                <div class="label">Show only</div>
+                <div class="tabs-wrapper" id="tabsContainer"></div>
             </div>
         </div>
     </div>
 
-    <div class="main-content">
-        <div class="results-info" id="resultsCount">0 results found</div>
-        
-        <div class="pagination-container">
-            <span>Page</span>
-            <div class="page-selector">
-                <span id="currentPageDisplay">1</span>
-                <svg width="14" height="14" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+    <div class="results-section">
+        <div class="container">
+            <div class="results-meta" id="resultsCount">0 results found</div>
+            <div class="pagination">
+                <span>Page</span>
+                <div class="page-select"><span id="currPage">1</span> &nbsp; ▾</div>
+                <span>of <span id="totalP">1</span></span>
             </div>
-            <span>of <span id="totalPages">1</span></span>
+            <div id="resultsContainer"></div>
         </div>
-
-        <div id="resultsContainer"></div>
     </div>
 
     <script>
-        // Restored full dataset structure (Sample of original mappings)
         const faqData = [
-            { l1: "I'm a new student and need help getting started", l2: "What should I do if my student visa isn't granted in time to start my course?", answer: "Contact Stop 1 immediately to discuss visa delays or deferral options." },
-            { l1: "I'm a new student and need help getting started", l2: "How do I plan my first year and enrol before semester starts?", answer: "Use the My Course Planner tool and follow step-by-step instructions in your offer." },
-            { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How is my Weighted Average Mark (WAM) calculated?", answer: "WAM is your average mark weighted by credit points of each subject." },
-            // ... (Includes all 58 L2 mappings from original list)
+            // I'm a new student and need help getting started
+            { l1: "I'm a new student and need help getting started", l2: "What should I do if my student visa isn't granted in time to start my course?", answer: "Contact Stop 1 immediately to discuss visa delays, potential late enrolment, or deferral options." },
+            { l1: "I'm a new student and need help getting started", l2: "How do I plan my first year and enrol before semester starts?", answer: "Use the My Course Planner tool and follow the step-by-step enrolment instructions in your offer." },
+            { l1: "I'm a new student and need help getting started", l2: "What is the Student Learning Entitlement (SLE)?", answer: "The SLE limits the total amount of Commonwealth supported study you can undertake in your lifetime." },
+            
+            // I need support with exams...
+            { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How is my Weighted Average Mark (WAM) calculated and what counts toward it?", answer: "WAM is your average mark weighted by the credit point value of each subject completed. Most subjects count toward it unless designated as pass/fail." },
+            { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How do I access ongoing support, including an Academic Adjustment Plan (AAP)?", answer: "Register with Student Equity and Disability Support (SEDS) with medical documentation to establish an AAP." },
+            { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What support can I get if circumstances affect my assessments?", answer: "Apply for Special Consideration if unexpected illness or hardship impacts your performance." },
+            { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What should I do if I fail a subject?", answer: "Consult a course advisor to see how the fail impacts your progression and future subject choices." },
+            { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "Why can't I see my final results after the results release date?", answer: "Results may be hidden due to outstanding fees, sanctions, or pending academic integrity reviews." },
+            { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What options do I have if I miss, fail, or am worried about an exam?", answer: "You may be eligible for Special Consideration or a supplementary exam depending on the circumstances." },
+            { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How do I access a faculty-managed supplementary exam?", answer: "These are granted via Special Consideration or specific faculty-based criteria for final subjects." },
+            { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "Can I apply to extend my Maximum Course Length before a CAPC meeting?", answer: "You must apply for an extension if your studies exceed the standard allowable duration." },
+            { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What is Final Subject Assessment (FSA), and how does it work?", answer: "A final opportunity to pass a single failed subject required for graduation." },
+
+            // I'm considering another course...
+            { l1: "I'm considering another course or graduate study", l2: "What are the entry requirements for my course, and are there guaranteed entry pathways?", answer: "Check the Handbook for ATAR, GPA, and prerequisite specifics for graduate entry." },
+            { l1: "I'm considering another course or graduate study", l2: "What is Graduate Access Melbourne (GAM), and how do I apply?", answer: "GAM is an equity program; apply through VTAC or the University's graduate portal." },
+            { l1: "I'm considering another course or graduate study", l2: "Who can I speak to about graduate coursework study options?", answer: "Book an appointment with Stop 1 or attend a graduate study information session." },
+            { l1: "I'm considering another course or graduate study", l2: "Do I still need to re-enrol if I've applied to transfer courses?", answer: "Yes, maintain your current enrolment until you receive and accept a new offer." },
+            { l1: "I'm considering another course or graduate study", l2: "How do I transfer from one University of Melbourne degree to another?", answer: "Applications are typically made through VTAC for undergraduate or directly for graduate courses." },
+            { l1: "I'm considering another course or graduate study", l2: "What should I do about my summer subject if I'm transferring courses?", answer: "Speak to Stop 1 to see if the subject credits toward your new course before withdrawing." },
+
+            // I need help choosing, changing...
+            { l1: "I need help choosing, changing, or planning my subjects", l2: "Can someone review my course plan in My Course Planner?", answer: "Yes, submit your plan via the 'Request Review' button in the planner tool." },
+            { l1: "I need help choosing, changing, or planning my subjects", l2: "What happens if I withdraw from a subject?", answer: "If done before the census date, there is no academic penalty or fee. After that, penalties apply." },
+            { l1: "I need help choosing, changing, or planning my subjects", l2: "Can I get advice on the subjects I've chosen this semester?", answer: "Course advisors at Stop 1 can help verify if your choices meet degree requirements." },
+            { l1: "I need help choosing, changing, or planning my subjects", l2: "How do I take part in Melbourne Plus activities?", answer: "Register through the University's student life portal to track co-curricular activities." },
+            { l1: "I need help choosing, changing, or planning my subjects", l2: "Can I get help with my Skills Towards Employment Program (STEP) subject?", answer: "Specialized tutors and career advisors are available for STEP-specific guidance." },
+            { l1: "I need help choosing, changing, or planning my subjects", l2: "What internship subjects can I take, and how do I apply?", answer: "Search the Handbook for 'Internship' subjects within your faculty and follow the application link." },
+            { l1: "I need help choosing, changing, or planning my subjects", l2: "Can someone help me understand my subject prerequisites?", answer: "Prerequisites are listed in the Handbook; course advisors can clarify complex requirements." },
+
+            // Course structure, majors/minors
+            { l1: "I need to understand my course structure, majors/minors and study load", l2: "What are my part-time study options, and will it affect my course plan?", answer: "You can reduce your load to 1-2 subjects; check if this affects your visa or scholarship." },
+            { l1: "I need to understand my course structure, majors/minors and study load", l2: "What do I need to know about changing my study load (reducing or overloading)?", answer: "Overloading requires a high WAM; reducing load may extend your course duration." },
+            { l1: "I need to understand my course structure, majors/minors and study load", l2: "Am I eligible for an early exit award?", answer: "Some Master's degrees allow an exit with a Graduate Diploma if requirements are met." },
+            { l1: "I need to understand my course structure, majors/minors and study load", l2: "Can someone help me understand my course structure and course rules?", answer: "Stop 1 provides course planning sessions to map out your entire degree." },
+            { l1: "I need to understand my course structure, majors/minors and study load", l2: "What do I need to know before taking a Leave of Absence?", answer: "Check census dates and the impact on your Maximum Course Length." },
+            { l1: "I need to understand my course structure, majors/minors and study load", l2: "Am I on track to complete my degree?", answer: "Use the Course Progression tool in eStudent to verify remaining credit points." },
+            { l1: "I need to understand my course structure, majors/minors and study load", l2: "How do I plan or change my major, minor, or specialisation?", answer: "Update these preferences in the 'Study Plan' tab within eStudent." },
+
+            // Enrolling and managing
+            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What do I need to know before withdrawing from my course?", answer: "Speak to a counselor or advisor to explore alternatives before formal withdrawal." },
+            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Am I eligible for a concurrent diploma, and how do I add one to my course?", answer: "Apply via the 'Internal Course Application' in eStudent if you meet the WAM requirements." },
+            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I apply for Honours before finishing my concurrent diploma?", answer: "Yes, but you must ensure you meet the entry requirements for both." },
+            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I defer my course, and where can I get advice before deciding?", answer: "New students can defer via the enrolment portal; advice is available at Stop 1." },
+            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Why can't I enrol in a subject?", answer: "Usually due to a prerequisite error, a timetable clash, or the subject being full." },
+            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "How do I make changes to my Study Plan or subjects?", answer: "Use the 'Enrol in Subjects' section of eStudent to add or drop subjects." },
+            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Why can't I enrol in a quota subject?", answer: "Quota subjects have limited spots and often require an earlier application deadline." },
+            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What should I do if I've been removed from my course because I didn't enrol or re-enrol correctly?", answer: "Apply for reinstatement immediately; this may involve a late fee." },
+            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What do I need to do to re-enrol, and what happens if I miss the deadline?", answer: "Re-enrol via eStudent; missing the deadline may lead to a loss of your place in the course." },
+            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What is a concurrent diploma, and how does it work?", answer: "A separate diploma (e.g. Languages) taken alongside your main degree." },
+            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I change how a completed subject counts across my Bachelor and concurrent diploma?", answer: "Request a cross-credit transfer via a Stop 1 technical inquiry." },
+
+            // Credit from previous study
+            { l1: "I have questions about credit from my previous study", l2: "Can I change my entry point in a graduate course?", answer: "This depends on whether your previous study matches the course structure." },
+            { l1: "I have questions about credit from my previous study", l2: "How do I plan my course if I have advanced standing (credit)?", answer: "Map your remaining subjects in My Course Planner, skipping credited items." },
+            { l1: "I have questions about credit from my previous study", l2: "Am I eligible for advanced standing (credit) in my course?", answer: "Submit an application with your previous official transcripts and syllabus." },
+            { l1: "I have questions about credit from my previous study", l2: "Can I re-apply for advanced standing (credit) that I previously removed?", answer: "Yes, provided the previous study is still relevant and within time limits." },
+            { l1: "I have questions about credit from my previous study", l2: "Can I enrol in subjects while my advanced standing (credit) application is being assessed?", answer: "Yes, but avoid enrolling in the exact subjects you are seeking credit for." },
+            { l1: "I have questions about credit from my previous study", l2: "Can I get an exemption for my Discovery subject?", answer: "Rarely; Discovery subjects are unique to the Melbourne curriculum." },
+            { l1: "I have questions about credit from my previous study", l2: "Can I remove advanced standing (credit) that's already been applied to my course?", answer: "Yes, via a formal request if you prefer to take the subject at Melbourne." },
+
+            // Study overseas
+            { l1: "I want to study overseas as part of my course", l2: "What do I need to know about going on exchange?", answer: "Check partner universities, WAM requirements, and application deadlines." },
+            { l1: "I want to study overseas as part of my course", l2: "Do course progression rules still apply while I'm on exchange?", answer: "Yes; you must ensure the overseas subjects meet your degree requirements." },
+            { l1: "I want to study overseas as part of my course", l2: "What do I need to know about going on exchange in my final semester?", answer: "This may delay your graduation if overseas results are late." },
+            { l1: "I want to study overseas as part of my course", l2: "Can I study overseas as part of my course?", answer: "Yes, via exchange or study abroad programs." },
+            { l1: "I want to study overseas as part of my course", l2: "Will studying on exchange affect my WAM?", answer: "Usually, exchange results are recorded as Pass/Fail and don't impact WAM." },
+            { l1: "I want to study overseas as part of my course", l2: "How do I know which exchange subjects will count for credit toward my degree?", answer: "Submit a proposed study plan to your faculty for pre-approval before leaving." }
         ];
 
-        const filterMappings = {
+        const filterMap = {
             "All results": [],
             "New Student": ["I'm a new student and need help getting started"],
-            "Subjects & Courses": [
-                "I'm considering another course or graduate study", 
-                "I need help choosing, changing, or planning my subjects",
-                "I need help enrolling and managing my study plan for my course or concurrent diploma",
-                "I need to understand my course structure, majors/minors and study load"
-            ],
+            "Subjects & Courses": ["I'm considering another course or graduate study", "I need help choosing, changing, or planning my subjects"],
             "Assessments": ["I need support with exams, assessments, results, or ongoing circumstances affecting my study"],
+            "Enrolment": ["I need help enrolling and managing my study plan for my course or concurrent diploma", "I need to understand my course structure, majors/minors and study load"],
             "Credits": ["I have questions about credit from my previous study"],
             "Exchange": ["I want to study overseas as part of my course"]
         };
 
-        let currentActiveTab = "All results";
-        let currentSearchQuery = "";
-        let currentPage = 1;
-        const resultsPerPage = 12;
-
-        function renderTabs() {
-            const container = document.getElementById("tabsContainer");
-            container.innerHTML = "";
-            Object.keys(filterMappings).forEach(name => {
-                const count = name === "All results" ? faqData.length : 
-                    faqData.filter(i => filterMappings[name].includes(i.l1)).length;
-                
-                const tab = document.createElement("div");
-                tab.className = `tab ${name === currentActiveTab ? 'active' : ''}`;
-                tab.innerHTML = `${name} <span class="tab-badge">${count}</span>`;
-                tab.onclick = () => { currentActiveTab = name; currentPage = 1; updateUI(); };
-                container.appendChild(tab);
-            });
-        }
+        let currentTab = "All results";
+        let searchQuery = "";
 
         function updateUI() {
-            let results = faqData;
-            if (currentActiveTab !== "All results") {
-                results = results.filter(i => filterMappings[currentActiveTab].includes(i.l1));
+            let filtered = faqData;
+            if (currentTab !== "All results") {
+                filtered = filtered.filter(i => filterMap[currentTab].includes(i.l1));
             }
-            if (currentSearchQuery) {
-                const q = currentSearchQuery.toLowerCase();
-                results = results.filter(i => i.l2.toLowerCase().includes(q));
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase();
+                filtered = filtered.filter(i => i.l2.toLowerCase().includes(q) || i.answer.toLowerCase().includes(q));
             }
 
-            const totalPages = Math.ceil(results.length / resultsPerPage) || 1;
-            document.getElementById("resultsCount").innerText = `${results.length} results found`;
-            document.getElementById("totalPages").innerText = totalPages;
-            document.getElementById("currentPageDisplay").innerText = currentPage;
-
+            document.getElementById("resultsCount").innerText = `${filtered.length} results found`;
             const container = document.getElementById("resultsContainer");
-            container.innerHTML = "";
-            results.slice((currentPage - 1) * resultsPerPage, currentPage * resultsPerPage).forEach(item => {
-                const card = document.createElement("div");
-                card.className = "result-card";
-                card.innerHTML = `<div class="result-title">${item.l2}</div><div class="result-answer">${item.answer}</div>`;
-                container.appendChild(card);
-            });
+            container.innerHTML = filtered.map(item => `
+                <div class="result-card">
+                    <div class="result-title">${item.l2}</div>
+                    <div class="result-ans">${item.answer}</div>
+                </div>
+            `).join('');
+
             renderTabs();
         }
 
-        document.getElementById("searchInput").oninput = (e) => {
-            currentSearchQuery = e.target.value;
-            currentPage = 1;
-            updateUI();
-        };
+        function renderTabs() {
+            const container = document.getElementById("tabsContainer");
+            container.innerHTML = Object.keys(filterMap).map(name => {
+                const count = name === "All results" ? faqData.length : faqData.filter(i => filterMap[name].includes(i.l1)).length;
+                return `
+                    <div class="tab ${name === currentTab ? 'active' : ''}" onclick="setTab('${name}')">
+                        ${name} <span class="tab-badge">${count}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.setTab = (t) => { currentTab = t; updateUI(); };
+        document.getElementById("searchInput").oninput = (e) => { searchQuery = e.target.value; updateUI(); };
 
         updateUI();
     </script>
