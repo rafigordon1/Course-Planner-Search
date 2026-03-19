@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University of Melbourne - Course Planning Help</title>
+    <style>
+        :root {
+            --primary-blue: #0A3B7C;
+            --active-tab-blue: #5B8CDE;
+            --hover-light-blue: #E8F0FE;
+            --link-blue: #0056b3;
+            --border-grey: #D1D5DB;
+            --card-accent-blue: #5B8CDE;
+        }
+
+        * { box-sizing: border-box; font-family: sans-serif; }
+        body { margin: 0; background-color: white; color: #333; }
+
+        .header-container {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 60px 20px 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 { font-size: 26px; font-weight: 500; margin: 0 0 40px 0; }
+        .row { display: flex; align-items: flex-start; margin-bottom: 30px; gap: 25px; }
+        .label { min-width: 100px; font-size: 18px; padding-top: 12px; }
+
+        .search-group { display: flex; flex-grow: 1; border-radius: 4px; overflow: hidden; }
+        .search-group input { flex-grow: 1; padding: 16px 20px; font-size: 18px; border: none; outline: none; }
+        
+        .search-group button { 
+            background-color: var(--active-tab-blue); 
+            color: white; 
+            border: none; 
+            padding: 0 45px; 
+            font-size: 18px; 
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .search-group button:hover {
+            background-color: #4a78c4;
+        }
+
+        .tabs-wrapper { display: flex; flex-wrap: wrap; gap: 12px; flex-grow: 1; }
+        .tab {
+            background-color: white;
+            color: var(--primary-blue);
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            position: relative;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .tab:hover {
+            background-color: var(--hover-light-blue);
+        }
+        .tab.active { background-color: var(--active-tab-blue); color: white; }
+        .tab.active:hover { background-color: var(--active-tab-blue); }
+
+        .tab-badge {
+            position: absolute;
+            top: -8px;
+            right: 10px;
+            background: white;
+            color: var(--primary-blue);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            border: 1px solid var(--border-grey);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .results-section { padding: 40px 20px; min-height: 500px;}
+        .results-meta { font-size: 15px; color: #666; margin-bottom: 25px; }
+
+        .pagination { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
+        .page-nav-btn {
+            background: white;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+        .page-nav-btn:hover:not(:disabled) {
+            background-color: var(--hover-light-blue);
+        }
+        .page-nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+        .result-card {
+            border: 1px solid var(--border-grey);
+            border-left: 6px solid var(--card-accent-blue);
+            padding: 30px;
+            margin-bottom: 20px;
+            border-radius: 2px;
+            background: #fff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            /* Added Grab Hand Cursor */
+            cursor: grab;
+        }
+        .result-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .result-title { 
+            font-size: 20px; 
+            font-weight: 700; 
+            color: black; 
+            margin-bottom: 12px; 
+            display: block; 
+            text-decoration: none;
+            transition: color 0.2s ease;
+            /* Added Grab Hand Cursor */
+            cursor: grab;
+        }
+        .result-card:hover .result-title {
+            color: var(--active-tab-blue);
+            text-decoration: underline;
+            text-decoration-color: var(--active-tab-blue);
+        }
+
+        .result-ans { color: #4B5563; font-size: 16px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <div class="container">
+            <h1>The University of Melbourne’s official source of course planning information</h1>
+            <div class="row">
+                <div class="label">Search for</div>
+                <div class="search-group">
+                    <input type="text" id="searchInput" placeholder="keywords">
+                    <button id="searchBtn">Search</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="label">Show only</div>
+                <div class="tabs-wrapper" id="tabsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-section">
+        <div class="container">
+            <div class="results-meta" id="resultsCount">0 results found</div>
+            
+            <div class="pagination" id="paginationControls">
+                <button id="prevPage" class="page-nav-btn">&lt;</button>
+                <span>Page</span>
+                <div style="border: 1px solid var(--primary-blue); padding: 6px 14px; border-radius: 4px; font-weight: bold; color: var(--primary-blue);">
+                    <span id="currPage">1</span> &nbsp; ▾
+                </div>
+                <span>of <span id="totalP">1</span></span>
+                <button id="nextPage" class="page-nav-btn">&gt;</button>
+            </div>
+
+            <div id="resultsContainer"></div>
+        </div>
+    </div>
+
+  <script>
+const faqData = [
+    { l1: "I’m a new student and need help getting started", l2: "What should I do if my student visa isn’t granted in time to start my course?", answer: "If you can’t arrive by the end of Week 2 due to visa delays, you are strongly advised to apply to defer your offer to a later intake." },
+    { l1: "I’m a new student and need help getting started", l2: "How do I plan my first year and enrol before semester starts?", answer: "Complete the Get Started website steps, then register for an Intro to Course Planning webinar to learn about course rules and timetabling." },
+    { l1: "I’m a new student and need help getting started", l2: "What is the Student Learning Entitlement (SLE)?", answer: "A 7-EFTSL limit (approx. 7 years) for Commonwealth Supported Places; once reached, you may need to transfer to a fee-paying place." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How is my Weighted Average Mark (WAM) calculated and what counts toward it?", answer: "WAM is your average mark weighted by credit points; failed subjects count, but pass/fail or withdrawn subjects do not." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How do I access ongoing support, including an Academic Adjustment Plan (AAP)?", answer: "Register with Student Equity and Disability Support (SEDS) with valid medical documentation to establish an AAP." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What support can I get if circumstances affect my assessments?", answer: "You can apply for Special Consideration if unexpected circumstances like illness or hardship impact your ability to complete assessments." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What should I do if I fail a subject?", answer: "Check how the fail affects your course progression and prerequisites; you may need to repeat the subject or choose an alternative." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "Why can't I see my final results after the results release date?", answer: "Results may be withheld due to outstanding fees, administrative sanctions, or pending academic integrity investigations." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What options do I have if I miss, fail, or am worried about an exam?", answer: "Depending on your situation, you may be eligible for Special Consideration, a supplementary exam, or a Final Subject Assessment." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How do I access a faculty-managed supplementary exam?", answer: "Supplementary exams are typically granted via the Special Consideration process or meeting specific faculty eligibility criteria." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "Can I apply to extend my Maximum Course Length before a CAPC meeting?", answer: "Yes, you must apply for an extension if your time to complete the degree will exceed the standard allowable duration." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What is Final Subject Assessment (FSA), and how does it work?", answer: "FSA is a final opportunity to pass a single failed subject required for graduation, provided you meet specific eligibility rules." },
+    { l1: "I’m considering another course or graduate study", l2: "What are the entry requirements for my course, and are there guaranteed entry pathways?", answer: "Requirements vary by course and often include a minimum ATAR/WAM and specific prerequisites; check the Study.unimelb site for details." },
+    { l1: "I’m considering another course or graduate study", l2: "What is Graduate Access Melbourne (GAM), and how do I apply?", answer: "GAM is an equity program for domestic students; apply as part of your graduate application with evidence of personal circumstances." },
+    { l1: "I’m considering another course or graduate study", l2: "Who can I speak to about graduate coursework study options?", answer: "Review courses on the Study at Melbourne website or book a Course Planning appointment to discuss how your current study fits future goals." },
+    { l1: "I’m considering another course or graduate study", l2: "Do I still need to re‑enrol if I’ve applied to transfer courses?", answer: "Yes, you must re-enrol in your current course while waiting for a transfer outcome to ensure you maintain your student status." },
+    { l1: "I’m considering another course or graduate study", l2: "How do I transfer from one University of Melbourne degree to another?", answer: "Apply via the internal Undergraduate Course Transfer form; selection is based on entry requirements, performance, and place availability." },
+    { l1: "I’m considering another course or graduate study", l2: "What should I do about my summer subject if I’m transferring courses?", answer: "Either finish the subject in your old course and apply for credit, or request a transfer to the new course via an Enrolment Assistance Form." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can someone review my course plan in My Course Planner?", answer: "Book an appointment with Course Planning and share your unique My Course Planner URL for a personalized review of your subjects." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "What happens if I withdraw from a subject?", answer: "Withdrawing has financial and academic consequences depending on the census date; check the Handbook for dates and use the withdrawal tool." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can I get advice on the subjects I’ve chosen this semester?", answer: "Review online planning resources or book a 15-minute course advice appointment to verify if your choices meet degree requirements." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "How do I take part in Melbourne Plus activities?", answer: "Register for recognized activities through the student portal to develop and receive digital credentials for your co-curricular skills." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can I get help with my Skills Towards Employment Program (STEP) subject?", answer: "Specific workshops and tutoring are available to help you navigate the requirements and career-readiness aspects of STEP." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "What internship subjects can I take, and how do I apply?", answer: "Search the University Handbook for faculty-specific internship subjects and follow the application process for vocational placement approval." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can someone help me understand my subject prerequisites?", answer: "Prerequisites are listed in the Handbook; if you have complex credit or background questions, book a Course Planning appointment." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "What are my part-time study options, and will it affect my course plan?", answer: "Domestic students can usually reduce their load to 1-2 subjects; check how this affects your expected completion date and any benefits." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "What do I need to know about changing my study load (reducing or overloading)?", answer: "Overloading requires a high WAM and approval; reducing load may extend your course duration or impact visa requirements for international students." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "Am I eligible for an early exit award?", answer: "Some courses allow you to exit early with a lower qualification (e.g., Graduate Diploma instead of Masters) if requirements are met." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "Can someone help me understand my course structure and course rules?", answer: "Use My Course Planner to map requirements or attend a Course Planning session for a breakdown of your degree structure and rules." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "What do I need to know before taking a Leave of Absence?", answer: "Check the impact on your Maximum Course Length and make sure you apply before the census date to avoid financial penalties." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "Am I on track to complete my degree?", answer: "Check your 'Course Progression' in my.unimelb to see completed vs. remaining credit points and verify you meet all rule requirements." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "How do I plan or change my major, minor, or specialisation?", answer: "Update your preferences via the 'Study Plan' tab in my.unimelb; seek course advice if you need help fitting a new major into your timeline." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "How do I withdraw from my course?", answer: "Withdraw from subjects before census dates first; then submit a course withdrawal request and await formal acknowledgement." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Am I eligible for a concurrent diploma, and how do I add one to my course?", answer: "Apply for a concurrent diploma via the 'Internal Course Application' in my.unimelb, ensuring you have space left in your undergraduate degree." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I apply for Honours before finishing my concurrent diploma?", answer: "Yes, you can apply for Honours, but you must manage your study plan to ensure both qualifications are completed appropriately." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I defer my course, and where can I get advice before deciding?", answer: "New students can defer via the Get Started portal; contact a course adviser to discuss how deferral might impact your future study plans." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Why can't I enrol in a subject?", answer: "Enrolment blocks are usually due to missing prerequisites, timetable clashes, subject quotas being full, or administrative holds." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "How do I make changes to my Study Plan or subjects?", answer: "Log into my.unimelb, go to the 'Enrolment' tab, and use the 'Enrol in Subjects' tool to add or swap subjects within your course rules." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Why can't I enrol in a quota subject?", answer: "Quota subjects have limited capacity and specific application deadlines; if full, you may need to wait for a future intake or choose a different subject." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What should I do if I've been removed from my course for non-enrolment?", answer: "Apply for reinstatement immediately via the Enrolment and Academic Records form; late fees and academic conditions may apply." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What do I need to do to re-enrol, and what if I miss the deadline?", answer: "Re-enrol via my.unimelb during the designated period; missing the deadline may result in a loss of your place or require a reinstatement application." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What is a concurrent diploma, and how does it work?", answer: "A separate diploma (e.g., Languages, Maths) taken alongside your Bachelor degree, adding 100 points of additional study." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I change how a subject counts across my Bachelor and concurrent diploma?", answer: "Request a 'Cross-Credit' update via a webform to move a subject between your primary degree and your diploma study plans." },
+    { l1: "I have questions about credit from my previous study", l2: "Can I change my entry point in a graduate course?", answer: "Entry points depend on the amount of relevant prior study you've completed; submit a credit application for assessment by the faculty." },
+    { l1: "I have questions about credit from my previous study", l2: "How do I plan my course if I have advanced standing (credit)?", answer: "Use My Course Planner to skip credited subjects and map out your remaining requirements based on your credit outcome letter." },
+    { l1: "I have questions about credit from my previous study", l2: "Am I eligible for advanced standing (credit) in my course?", answer: "Submit an application with official transcripts and subject outlines from your previous institution for formal assessment." },
+    { l1: "I have questions about credit from my previous study", l2: "Can I re-apply for advanced standing (credit) that I previously removed?", answer: "Yes, you can re-apply for credit that was previously declined or removed, provided the study remains relevant to your current course." },
+    { l1: "I have questions about credit from my previous study", l2: "Can I enrol in subjects while my credit application is being assessed?", answer: "Yes, but do not enrol in the specific subjects you are seeking credit for, as this may complicate your study plan once credit is granted." },
+    { l1: "I have questions about credit from my previous study", l2: "Can I get an exemption for my Discovery subject?", answer: "Discovery subjects are core to the Melbourne model; exemptions are rare and usually require evidence of equivalent broad-based study." },
+    { l1: "I have questions about credit from my previous study", l2: "Can I remove advanced standing (credit) that's already been applied?", answer: "Yes, you can request to have credit removed if you prefer to complete the equivalent subject at the University of Melbourne instead." },
+    { l1: "I want to study overseas as part of my course", l2: "What do I need to know about going on exchange?", answer: "Check eligibility requirements (like WAM), application deadlines, and partner university options on the Global Learning website." },
+    { l1: "I want to study overseas as part of my course", l2: "Do course progression rules still apply while I'm on exchange?", answer: "Yes, your overseas subjects must be pre-approved to ensure they count toward your degree and meet all progression requirements." },
+    { l1: "I want to study overseas as part of my course", l2: "What do I need to know about going on exchange in my final semester?", answer: "Final semester exchange can delay your graduation if overseas results are not received in time for the University's completion deadlines." },
+    { l1: "I want to study overseas as part of my course", l2: "Can I study overseas as part of my course?", answer: "Yes, through semester-long exchange, short-term programs, or independent study abroad; see Global Learning for all available pathways." },
+    { l1: "I want to study overseas as part of my course", l2: "Will studying on exchange affect my WAM?", answer: "Exchange subjects are typically recorded as 'Pass' or 'Fail' on your Melbourne transcript and do not contribute to your WAM calculation." },
+    { l1: "I want to study overseas as part of my course", l2: "How do I know which exchange subjects will count for credit?", answer: "You must submit a proposed study plan for faculty approval before you depart to ensure your overseas credits will be recognized." }
+].map((item, index) => ({ ...item, id: index + 1 })); // Map ID for link ordering
+
+const stopWords = new Set(["how", "do", "i", "for", "an", "the", "a", "is", "can", "to", "what", "should", "my", "me", "with", "about", "where", "does", "of", "in", "and", "on", "at", "by", "from", "be", "been", "was", "were", "has", "have", "had", "it", "its", "they", "them", "their", "there", "this", "that", "these", "those", "which", "who", "whom", "why", "if", "or"]);
+
+const synonymMap = {
+    "swap": ["change", "transfer", "switch", "trade", "exchange", "replace", "substitute", "shift", "alter", "modify", "transform", "convert", "rotate", "commute", "displace", "supersede", "variate", "deviate", "mutate", "transpose", "interchange", "shuffle", "veer", "waver", "fluctuate", "amend", "revamp", "revise", "rework", "adjust", "adapt", "remodel", "reconstruct", "reorganize", "interweave", "permutation", "reciprocate", "reposition", "reorient", "toggle", "flip", "alternate", "diversify", "recalibrate", "recondition", "renovate", "reform", "refashion", "transition", "move"],
+    "change": ["swap", "transfer", "alteration", "modification", "adjustment", "amendment", "variation", "evolution", "transition", "transformation", "revision", "refinement", "mutation", "metamorphosis", "diversification", "reconstruction", "remodeling", "reforming", "rearranging", "reordering", "conversion", "innovation", "updating", "upgrade", "correction", "rectification", "improvement", "advance", "development", "shift", "fluctuation", "oscillation", "deviation", "departure", "differentiation", "modulation", "tempering", "revisal", "reworking", "restructuring", "renewal", "renovation", "modernization", "reshaping", "tuning", "tweaking", "recasting", "reorientation", "retooling", "reformatting"],
+    "transfer": ["swap", "change", "move", "relocate", "transport", "transmit", "shift", "convey", "dispatch", "reassign", "redeploy", "transplant", "transpose", "carry", "deliver", "ship", "pass", "handover", "delegate", "assign", "bequeath", "cede", "grant", "alienate", "devolve", "transmit", "displace", "remove", "migrate", "transpose", "transduction", "transference", "translocation", "tranship", "consignment", "forwarding", "signover", "translation", "transfusion", "transition", "disposal", "ascription", "commutation", "exchange", "substitution", "switching", "post", "sending", "remittance", "routing"],
+    "visa": ["international", "overseas", "permit", "residency", "authorization", "passport", "travel", "immigration", "documentation", "status", "clearance", "endorsement", "license", "credentials", "entry", "border", "legal", "compliance", "coe", "confirmation", "citizenship", "migrant", "temporary", "permanent", "expiry", "renewal", "validation", "approval", "consent", "sanction", "warrant", "grant", "privilege", "rights", "eligibility", "protocol", "application", "formalities", "papers", "certification", "vouchsafe", "stipulation", "provision", "charter", "safe-conduct", "transit", "arrival", "settlement", "naturalization", "alien"],
+    "classes": ["subjects", "enrolment", "lectures", "tutorials", "seminars", "workshops", "units", "modules", "courses", "curriculum", "syllabus", "period", "session", "cohort", "stream", "practicals", "labs", "lessons", "instruction", "schooling", "training", "pedagogy", "studies", "academics", "program", "discipline", "major", "minor", "specialization", "elective", "core", "requirement", "timetable", "schedule", "agenda", "forum", "clinic", "studio", "briefing", "coaching", "tutelage", "mentorship", "education", "literacy", "attainment", "schoolwork", "coursework", "learning", "scholarship", "pedagogics"],
+    "money": ["fees", "financial", "entitlement", "funds", "capital", "currency", "cash", "payment", "bursary", "scholarship", "grant", "tuition", "debt", "loan", "budget", "subsidy", "allowance", "stipend", "resources", "wealth", "revenue", "income", "proceeds", "assets", "finances", "credit", "expenditure", "costs", "outlay", "balance", "account", "bank", "ledger", "compensation", "remuneration", "wages", "salary", "earnings", "profit", "dividend", "interest", "investment", "equity", "principal", "premium", "refund", "rebate", "discount", "price", "charge"],
+    "points": ["wam", "credit", "standing", "score", "tally", "rating", "merit", "units", "weighting", "percentage", "mark", "gpa", "average", "rank", "position", "level", "grade", "attainment", "achievement", "tally", "count", "total", "aggregate", "sum", "balance", "evaluation", "assessment", "record", "transcript", "status", "progress", "milestone", "step", "stage", "benchmark", "standard", "criteria", "measure", "index", "metric", "indicator", "value", "worth", "magnitude", "extent", "degree", "gradation", "interval", "calibration", "quota"],
+    "sick": ["special consideration", "assessment", "support", "illness", "medical", "unwell", "ill", "health", "ailment", "condition", "infirmity", "diseased", "symptomatic", "quarantined", "recuperating", "recovering", "physical", "mental", "leave", "absence", "incapacitated", "ailing", "debilitated", "frail", "weak", "injured", "trauma", "disability", "impairment", "disorder", "malady", "infection", "virus", "flu", "fever", "pain", "suffering", "care", "treatment", "therapy", "clinic", "hospital", "doctor", "physician", "gp", "certificate", "note", "rest", "convalescence", "sanatorium"],
+    "exm": ["exam", "assessment", "test", "quiz", "midterm", "final", "paper", "sitting", "evaluation", "verification", "check", "audit", "interrogation", "viva", "practical", "oral", "written", "invigilation", "proctoring", "survey", "review", "investigation", "analysis", "trial", "probation", "appraisal", "inspection", "measurement", "screening", "diagnosis", "benchmarking", "validation", "authentication", "demonstration", "presentation", "assignment", "project", "thesis", "dissertation", "capstone", "viva voce", "standardized", "mock", "preliminary", "board", "jury", "challenge", "hurdle", "gate", "milestone"],
+    "mark": ["result", "wam", "grade", "score", "rating", "percentage", "feedback", "comment", "critique", "rank", "level", "outcome", "standing", "position", "evaluation", "assessment", "judgment", "estimation", "appraisal", "value", "determination", "finding", "report", "transcript", "notation", "classification", "banding", "distinction", "credit", "pass", "fail", "hd", "high distinction", "merit", "honors", "praise", "remarks", "correction", "indication", "sign", "symbol", "representation", "attainment", "proficiency", "competency", "mastery", "achievement", "record", "documentation", "file"],
+    "enrollment": ["enrolment", "enrol", "registration", "matriculation", "admission", "sign-up", "listing", "induction", "orientation", "entry", "accession", "enlistment", "recruitment", "booking", "subscription", "engagement", "participation", "inclusion", "attendance", "membership", "incorporation", "affiliation", "integration", "initiation", "onboarding", "registry", "census", "roster", "intake", "application", "acceptance", "confirmation", "selection", "allotment", "assignment", "placement", "allocation", "reservation", "appointment", "designation", "nomination", "election", "enrolling", "signing", "recording", "cataloging", "filing", "processing", "log", "archive"],
+    "overseas": ["exchange", "abroad", "international", "foreign", "global", "transcontinental", "external", "distant", "remote", "exotic", "intercontinental", "multinational", "worldwide", "universal", "cosmopolitan", "extraterritorial", "outland", "alien", "travel", "expedition", "journey", "migration", "displacement", "tour", "voyage", "odyssey", "trek", "sojourn", "visit", "abroad", "offshore", "beyond", "yonder", "further", "across", "transatlantic", "transpacific", "continental", "regional", "provincial", "territorial", "jurisdictional", "political", "geographic", "topographic", "locational", "spatial", "navigational", "cartographic", "borderless"],
+    "campus": ["grounds", "university", "college", "facility", "infrastructure", "precinct", "yard", "quad", "quadrangle", "environment", "setting", "location", "site", "place", "premises", "buildings", "halls", "dorms", "residences", "hub", "center", "village", "estate", "domain", "area", "zone", "district", "sector", "region", "neighborhood", "vicinity", "surroundings", "locality", "spot", "point", "venue", "station", "base", "headquarters", "branch", "office", "classroom", "laboratory", "library", "gym", "refectory", "canteen", "garden", "park", "commons"],
+    "deadline": ["due date", "cutoff", "expiry", "limit", "target", "timeline", "schedule", "closing", "finish", "end", "termination", "boundary", "threshold", "frame", "window", "period", "span", "duration", "wait", "delay", "extension", "overdue", "late", "prompt", "punctual", "timing", "appointment", "engagement", "reservation", "booking", "slot", "milestone", "objective", "goal", "aim", "purpose", "intent", "plan", "strategy", "roadmap", "path", "course", "track", "route", "flow", "sequence", "order", "priority", "urgency", "critical"]
+};
+
+const categories = {
+    "All results": [],
+    "New Student": ["I'm a new student and need help getting started"],
+    "Subjects & Courses": [
+        "I'm considering another course or graduate study",
+        "I need help choosing, changing, or planning my subjects",
+        "I need help enrolling and managing my study plan for my course or concurrent diploma",
+        "I need to understand my course structure, majors/minors and study load"
+    ],
+    "Assessments": ["I need support with exams, assessments, results, or ongoing circumstances affecting my study"],
+    "Credits": ["I have questions about credit from my previous study"],
+    "Exchange": ["I want to study overseas as part of my course"]
+};
+
+let currentTab = "All results";
+let searchQuery = "";
+let currentPage = 1;
+const resultsPerPage = 12;
+
+function updateUI() {
+    const rawInput = searchQuery.trim().toLowerCase();
+    const cleanInput = rawInput.replace(/[^\w\s]/gi, '');
+    const tokens = cleanInput.split(/\s+/).filter(t => t.length > 0);
+    const filteredTokens = tokens.filter(t => !stopWords.has(t));
+
+    let scoredResults = faqData.map(item => {
+        let score = 0;
+        const title = item.l2.toLowerCase();
+        const content = item.answer.toLowerCase();
+
+        if (rawInput.length > 0) {
+            if (title.includes(rawInput)) score += 150;
+            filteredTokens.forEach(token => {
+                const regex = new RegExp(`\\b${token}\\b`, 'i');
+                if (regex.test(title)) score += 40;
+                if (synonymMap[token]) {
+                    synonymMap[token].forEach(syn => { if (title.includes(syn)) score += 30; });
+                }
+                if (!regex.test(title)) {
+                    Object.keys(synonymMap).forEach(key => { if (token.length > 2 && key.includes(token)) score += 20; });
+                }
+                if (regex.test(content)) score += 30;
+            });
+        } else { score = 100; }
+        return { ...item, score };
+    });
+
+    let filtered = scoredResults.filter(item => item.score >= 20);
+    if (currentTab !== "All results") {
+        filtered = filtered.filter(item => categories[currentTab].includes(item.l1));
+    }
+    filtered.sort((a, b) => b.score - a.score);
+
+    const totalResults = filtered.length;
+    const totalPages = Math.ceil(totalResults / resultsPerPage) || 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    document.getElementById("resultsCount").innerText = `${totalResults} results found`;
+    document.getElementById("totalP").innerText = totalPages;
+    document.getElementById("currPage").innerText = currentPage;
+    
+    const paginationControls = document.getElementById("paginationControls");
+    paginationControls.style.display = totalResults > 0 ? "flex" : "none";
+    document.getElementById("prevPage").disabled = (currentPage === 1);
+    document.getElementById("nextPage").disabled = (currentPage === totalPages);
+
+    const container = document.getElementById("resultsContainer");
+    if (totalResults === 0) {
+        container.innerHTML = `<div style="text-align:center; padding: 50px; color:#666;">No relevant results found. Try using broader keywords.</div>`;
+    } else {
+        const startIndex = (currentPage - 1) * resultsPerPage;
+        const paginatedResults = filtered.slice(startIndex, startIndex + resultsPerPage);
+        container.innerHTML = paginatedResults.map(item => `
+            <div class="result-card" onclick="window.location.href='${item.id}.html'">
+                <div class="result-title">${item.l2}</div>
+                <div class="result-ans">${item.answer}</div>
+            </div>
+        `).join('');
+    }
+    renderTabs();
+}
+
+function renderTabs() {
+    const container = document.getElementById("tabsContainer");
+    container.innerHTML = Object.keys(categories).map(name => {
+        let count = (name === "All results") ? faqData.length : faqData.filter(i => categories[name].includes(i.l1)).length;
+        return `<div class="tab ${name === currentTab ? 'active' : ''}" onclick="setTab('${name}')">
+            ${name} <span class="tab-badge">${count}</span>
+        </div>`;
+    }).join('');
+}
+
+window.setTab = (t) => { currentTab = t; currentPage = 1; updateUI(); };
+document.getElementById("searchInput").oninput = (e) => { searchQuery = e.target.value; currentPage = 1; updateUI(); };
+document.getElementById("prevPage").onclick = () => { if (currentPage > 1) { currentPage--; updateUI(); window.scrollTo(0, 300); } };
+document.getElementById("nextPage").onclick = () => { 
+    const totalResults = parseInt(document.getElementById("resultsCount").innerText);
+    if (currentPage < Math.ceil(totalResults / resultsPerPage)) { currentPage++; updateUI(); window.scrollTo(0, 300); } 
+};
+
+updateUI();
+    </script>
+</body>
+</html>
