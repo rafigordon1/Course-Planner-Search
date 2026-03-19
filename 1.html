@@ -3,214 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Planning | Student Support</title>
+    <title>Course planning | Student Support</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --nav-bg: #001a2d;
-            --header-bg: #000c26;
-            --footer-top: #000c26;
-            --footer-bottom: #3a4361;
-            --text-white: #ffffff;
-            --link-blue: #1a0dab;
-            --bg-highlight: #fde2f3; 
-            --bg-important: #fae1cd;
-            --bg-appointment: #d0ebff;
+            --hero-bg: #000c26;
+            --footer-dark: #000c26;
+            --footer-slate: #3a4361;
+            --primary-blue: #094168; /* Exact shade from main screenshot h1 */
+            --pink-bg: #fde2f3;
+            --orange-title: #f8e1cc;
+            --orange-body: #fcebdc;
+            --blue-advice-title: #d0ebff;
+            --blue-advice-body: #e3f2fd;
+            --text-dark: #1a1a1a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+            color: var(--text-dark);
+            background-color: #ffffff;
         }
 
-        /* --- HEADER SECTION --- */
+        /* --- Full Width Header --- */
         .breadcrumb-nav {
             background-color: var(--nav-bg);
-            color: rgba(255, 255, 255, 0.8);
-            padding: 10px 5%;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-        }
-
-        .breadcrumb-nav span { margin: 0 8px; color: #788fa5; }
-
-        .hero-header {
-            background-color: var(--header-bg);
             color: white;
-            padding: 60px 5%;
+            padding: 12px 5%;
+            font-size: 14px;
         }
 
-        .hero-header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            font-weight: 400;
-            margin-bottom: 10px;
-        }
+        .breadcrumb-nav span { color: #8fa1b3; margin: 0 5px; }
 
-        .hero-header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        /* --- MAIN CONTENT --- */
-        main {
-            flex: 1;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
+        .hero-section {
+            background-color: var(--hero-bg);
+            color: white;
             padding: 50px 5%;
         }
 
-        .status-badge {
-            background-color: var(--bg-highlight);
-            padding: 4px 12px;
+        .hero-section h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+
+        /* --- Main Content Area --- */
+        main {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 5%;
+        }
+
+        .status-header {
+            background-color: var(--pink-bg);
+            padding: 2px 8px;
             display: inline-block;
             font-weight: 600;
-            margin-bottom: 30px;
-        }
-
-        .visa-title {
-            color: #003057;
-            font-size: 2.2rem;
             margin-bottom: 25px;
-            line-height: 1.2;
         }
 
-        h2 { color: #003057; margin: 40px 0 15px; font-size: 1.6rem; }
+        .main-title {
+            color: var(--primary-blue);
+            font-size: 1.85rem;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            color: var(--primary-blue);
+            font-size: 1.35rem;
+            margin-top: 35px;
+            margin-bottom: 12px;
+        }
+
+        p { margin-bottom: 15px; font-size: 1.05rem; }
         
-        .important-box {
-            margin: 40px 0;
-            background-color: var(--bg-important);
-        }
+        a { color: #0056b3; text-decoration: underline; }
 
+        .url-text { font-size: 0.95rem; color: #555; display: block; margin-top: 4px; }
+
+        /* --- Information Boxes --- */
+        .important-box { margin-top: 30px; }
+        
         .important-header {
-            background-color: #f1cbb0;
-            padding: 10px 20px;
+            background-color: var(--orange-title);
+            padding: 6px 15px;
             font-weight: bold;
+            font-size: 1.1rem;
+            color: #222;
         }
 
-        .important-content { padding: 20px; }
-        .important-content ul { padding-left: 20px; }
+        .important-content {
+            background-color: var(--orange-body);
+            padding: 15px 15px 15px 45px;
+        }
 
-        .advice-section { margin-top: 50px; }
-        .advice-header { background-color: var(--bg-appointment); padding: 12px 20px; font-weight: bold; }
-        .advice-body { background-color: #eaf6ff; padding: 20px; }
+        .important-content ul { list-style-type: disc; }
+        .important-content li { margin-bottom: 8px; }
 
-        /* --- FOOTER SECTION --- */
-        footer { width: 100%; color: white; margin-top: 60px; }
+        .advice-box { margin-top: 40px; }
+
+        .advice-header {
+            background-color: var(--blue-advice-title);
+            padding: 8px 15px;
+            font-weight: bold;
+            color: #003057;
+        }
+
+        .advice-body {
+            background-color: var(--blue-advice-body);
+            padding: 12px 15px;
+        }
+
+        /* --- Full Width Footer --- */
+        footer { margin-top: 80px; color: white; }
 
         .footer-top {
-            background-color: var(--footer-top);
+            background-color: var(--footer-dark);
             padding: 40px 5%;
             text-align: center;
         }
 
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 20px;
-        }
-
-        .social-item { text-align: center; text-decoration: none; color: white; font-size: 0.9rem; }
-        .social-item img { display: block; margin: 0 auto 8px; width: 24px; filter: invert(1); }
-
         .footer-bottom {
-            background-color: var(--footer-bottom);
+            background-color: var(--footer-slate);
             padding: 40px 5%;
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 250px 1fr;
             gap: 40px;
         }
 
-        .ack-title { font-weight: bold; width: 200px; }
-        .ack-text { flex: 1; min-width: 300px; font-size: 0.95rem; }
-        .ack-text a { color: white; text-decoration: none; display: block; margin-top: 15px; font-weight: bold; }
-
-        .flag-icons { display: flex; gap: 10px; margin-top: 15px; }
-        .flag { width: 40px; height: 25px; border-radius: 2px; }
+        .flag-stack { display: flex; gap: 8px; margin-top: 15px; }
+        .flag-rect { width: 36px; height: 24px; border-radius: 1px; }
 
         @media (max-width: 768px) {
-            .hero-header h1 { font-size: 2.5rem; }
-            .footer-bottom { flex-direction: column; }
+            .footer-bottom { grid-template-columns: 1fr; }
+            .hero-section h1 { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
 
-    <nav class="breadcrumb-nav">
-        🏠 Students <span>&gt;</span> Your course <span>&gt;</span> Manage your course <span>&gt;</span> Course enrolment <span>&gt;</span> Transferring courses
-    </nav>
+<nav class="breadcrumb-nav">
+    🏠 Students <span>&gt;</span> Your course <span>&gt;</span> Manage your course <span>&gt;</span> Course enrolment <span>&gt;</span> Transferring courses
+</nav>
 
-    <div class="hero-header">
-        <h1>Course planning</h1>
-        <p>Tell us about your enquiry and we'll let you know the best way to get help.</p>
+<div class="hero-section">
+    <h1>Course planning</h1>
+    <p>Tell us about your enquiry and we'll let you know the best way to get help.</p>
+</div>
+
+<main>
+    <div class="status-header">
+        1.1. What should I do if my student visa isn't granted in time to start my course?
     </div>
 
-    <main>
-        <div class="status-badge">1.1. What should I do if my student visa isn't granted in time to start my course?</div>
-        
-        <h2 class="visa-title">Getting your student visa in time to start your course</h2>
-        
-        <p>If you plan to study on a <strong>student visa</strong>, you must be <strong>in Australia to start your course</strong>. Student visa holders can't study fully online due to <strong>online study limitations</strong>.</p>
+    <h1 class="main-title">Getting your student visa in time to start your course</h1>
 
-        <h2>When you need to arrive</h2>
-        <p>If you're a <strong>commencing student</strong>, aim to arrive by <strong>orientation week</strong> or your <strong>earliest subject start date</strong>.</p>
-        <p>Most courses <strong>don't allow students to start after the end of Week 2</strong> of semester.</p>
+    <p>If you plan to study on a <strong>student visa</strong>, you must be <strong>in Australia to start your course</strong>. Student visa holders can’t study fully online due to <strong>online study limitations</strong>
+        <span class="url-text">(<a href="#">https://students.unimelb.edu.au/student-support/international-student-support/visas/visa-implications-of-changing-your-enrolment/online-study-limitations</a>)</span>.
+    </p>
 
-        <div class="important-box">
-            <div class="important-header">Important to know</div>
-            <div class="important-content">
-                <ul>
-                    <li>You may be recorded as a non-commencing student if you don't arrive on time.</li>
-                    <li>Your Confirmation of Enrolment (CoE) may be ended.</li>
-                    <li>This can affect your current or future visa.</li>
-                </ul>
+    <h2>When you need to arrive</h2>
+
+    <p>If you’re a <strong>commencing student</strong>, aim to arrive by <strong>orientation week</strong> or your <strong>earliest subject start date</strong>. Start dates are listed in the <strong>Handbook</strong>
+        <span class="url-text">(<a href="#">https://handbook.unimelb.edu.au/search</a>)</span>.
+    </p>
+
+    <p>Most courses <strong>don’t allow students to start after the end of Week 2</strong> of semester.</p>
+
+    <h2>If your visa is delayed</h2>
+
+    <p>If you can’t arrive by the <strong>end of Week 2</strong> due to visa delays, you’re strongly advised <strong><a href="#">to apply</a> to defer your offer</strong> to a later intake, if your course allows
+        <span class="url-text">(<a href="#">https://students.unimelb.edu.au/new-students/defer-or-decline-your-offer/defer-my-offer</a>)</span>.
+    </p>
+
+    <div class="important-box">
+        <div class="important-header">Important to know</div>
+        <div class="important-content">
+            <ul>
+                <li>You may be recorded as a <strong>non-commencing student</strong> if you don’t arrive on time.</li>
+                <li>Your <strong>Confirmation of Enrolment (CoE)</strong> may be ended.</li>
+                <li>This can affect your <strong>current or future visa</strong>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="advice-box">
+        <div class="advice-header">Need advice about your situation?</div>
+        <div class="advice-body">
+            Book an <strong>appointment</strong> (Link TBC) to get advice on visa delays, deferral options, and next steps.
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-top">
+        <h3>Contact or follow us</h3>
+        <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.8;">Stop 1 | Facebook | Instagram</p>
+    </div>
+    <div class="footer-bottom">
+        <div>
+            <strong>Acknowledgement of Country</strong>
+            <div class="flag-stack">
+                <div class="flag-rect" style="background: linear-gradient(to bottom, black 50%, #e00 50%);"></div>
+                <div class="flag-rect" style="background: #00843d; border-top: 4px solid #00223e; border-bottom: 4px solid #00223e;"></div>
             </div>
         </div>
-
-        <div class="advice-section">
-            <div class="advice-header">Need advice about your situation?</div>
-            <div class="advice-body">
-                Book an <strong>appointment</strong> to get advice on visa delays, deferral options, and next steps.
-            </div>
+        <div>
+            <p>We acknowledge Aboriginal and Torres Strait Islander people as the Traditional Owners of the unceded lands on which we work, learn and live. We pay respect to Elders past, present and future, and acknowledge the importance of Indigenous knowledge in the Academy.</p>
+            <p style="margin-top: 15px;"><strong>→ Read about our Indigenous priorities</strong></p>
         </div>
-    </main>
+    </div>
+</footer>
 
-    <footer>
-        <div class="footer-top">
-            <h3>Contact or follow us</h3>
-            <div class="social-links">
-                <a href="#" class="social-item"><i>ⓘ</i><br>Stop 1</a>
-                <a href="#" class="social-item"><i>f</i><br>Facebook</a>
-                <a href="#" class="social-item"><i>o</i><br>Instagram</a>
-            </div>
-        </div>
+<script>
+    console.log("Script strictly replicated with official branding.");
+</script>
 
-        <div class="footer-bottom">
-            <div class="ack-title">
-                Acknowledgement of Country
-                <div class="flag-icons">
-                    <div class="flag" style="background: linear-gradient(to bottom, black 50%, #d00 50%); position: relative;"><div style="background: yellow; width: 10px; height: 10px; border-radius: 50%; position: absolute; top: 7px; left: 15px;"></div></div>
-                    <div class="flag" style="background: green; border-top: 3px solid blue; border-bottom: 3px solid blue;"></div>
-                </div>
-            </div>
-            <div class="ack-text">
-                We acknowledge Aboriginal and Torres Strait Islander people as the Traditional Owners of the unceded lands on which we work, learn and live. We pay respect to Elders past, present and future, and acknowledge the importance of Indigenous knowledge in the Academy.
-                <a href="#">→ Read about our Indigenous priorities</a>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        console.log("Replicated design active.");
-    </script>
 </body>
 </html>
