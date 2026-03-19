@@ -50,7 +50,6 @@
             display: flex;
             align-items: center;
             border: 1px solid transparent;
-            transition: all 0.2s ease;
         }
         .tab.active { background-color: var(--active-tab-blue); color: white; }
         .tab-badge {
@@ -66,7 +65,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .results-section { padding: 40px 20px; min-height: 400px; }
+        .results-section { padding: 40px 20px; min-height: 500px;}
         .results-meta { font-size: 15px; color: #666; margin-bottom: 25px; }
 
         .pagination { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
@@ -89,22 +88,8 @@
             border-radius: 2px;
             background: #fff;
         }
-        .result-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: black;
-            margin-bottom: 12px;
-            text-decoration: none;
-            display: block;
-        }
-        .result-title:hover { color: var(--hover-blue); cursor: pointer; }
+        .result-title { font-size: 20px; font-weight: 700; color: black; margin-bottom: 12px; display: block; }
         .result-ans { color: #4B5563; font-size: 16px; line-height: 1.6; }
-        
-        .no-results {
-            text-align: center;
-            padding: 60px 20px;
-            color: #666;
-        }
     </style>
 </head>
 <body>
@@ -143,6 +128,7 @@
     </div>
 
     <script>
+        // FULL 58 MAPPINGS DATA
         const faqData = [
             { l1: "I'm a new student and need help getting started", l2: "What should I do if my student visa isn't granted in time to start my course?", answer: "Contact Stop 1 immediately to discuss visa delays, potential late enrolment, or deferral options." },
             { l1: "I'm a new student and need help getting started", l2: "How do I plan my first year and enrol before semester starts?", answer: "Use the My Course Planner tool and follow the step-by-step enrolment instructions in your offer." },
@@ -202,7 +188,19 @@
             { l1: "I want to study overseas as part of my course", l2: "What is the difference between Exchange and Study Abroad?", answer: "Exchange is with partner universities; Study Abroad is with any accredited institution." }
         ];
 
-        const filterMap = {
+        // LOGIC & ALGORITHM
+        const stopWords = new Set(["how", "do", "i", "for", "an", "the", "a", "is", "can", "to", "what", "should", "my", "me", "with", "about"]);
+        const synonymMap = {
+            "swap": ["change", "transfer"],
+            "change": ["swap", "transfer"],
+            "transfer": ["swap", "change"],
+            "visa": ["international", "overseas"],
+            "classes": ["subjects", "enrolment"],
+            "money": ["fees", "financial", "entitlement"],
+            "points": ["wam", "credit", "standing"]
+        };
+
+        const categories = {
             "All results": [],
             "New Student": ["I'm a new student and need help getting started"],
             "Subjects & Courses": [
@@ -222,49 +220,75 @@
         const resultsPerPage = 12;
 
         function updateUI() {
-            // 1. FILTERING
-            let filtered = faqData;
+            const rawInput = searchQuery.trim().toLowerCase();
+            // 1. TEXT CLEANING (Normalization)
+            const cleanInput = rawInput.replace(/[^\w\s]/gi, '');
+            // 1. TOKENIZATION
+            const tokens = cleanInput.split(/\s+/).filter(t => t.length > 0);
+            // 2. NOISE REDUCTION
+            const filteredTokens = tokens.filter(t => !stopWords.has(t));
 
-            // First apply Tab filter
+            let scoredResults = faqData.map(item => {
+                let score = 0;
+                const title = item.l2.toLowerCase();
+                const content = item.answer.toLowerCase();
+
+                if (rawInput.length > 0) {
+                    // 4. SMART SCORING - Exact Phrase Match (+150)
+                    if (title.includes(rawInput)) score += 150;
+
+                    filteredTokens.forEach(token => {
+                        // 4. SMART SCORING - Exact Word Match (+40) via Regex
+                        const regex = new RegExp(`\\b${token}\\b`, 'i');
+                        if (regex.test(title)) score += 40;
+
+                        // 3. CONCEPT LINKING - Synonym Match (+30)
+                        if (synonymMap[token]) {
+                            synonymMap[token].forEach(syn => {
+                                const synRegex = new RegExp(`\\b${syn}\\b`, 'i');
+                                if (synRegex.test(title)) score += 30;
+                            });
+                        }
+
+                        // 4. SMART SCORING - Content Deep-Dive (+20)
+                        if (regex.test(content)) score += 20;
+                    });
+                } else {
+                    // Default view points for popularity
+                    score = 100; 
+                }
+
+                return { ...item, score };
+            });
+
+            // 5. QUALITY CONTROL - Relevance Threshold (20 points)
+            let filtered = scoredResults.filter(item => item.score >= 20);
+
+            // TAB FILTERING
             if (currentTab !== "All results") {
-                filtered = filtered.filter(item => filterMap[currentTab].includes(item.l1));
+                filtered = filtered.filter(item => categories[currentTab].includes(item.l1));
             }
 
-            // Then apply Search filter
-            if (searchQuery.trim() !== "") {
-                const q = searchQuery.toLowerCase();
-                filtered = filtered.filter(item => 
-                    item.l2.toLowerCase().includes(q) || 
-                    item.answer.toLowerCase().includes(q)
-                );
-            }
+            // SORTING BY SCORE
+            filtered.sort((a, b) => b.score - a.score);
 
-            // 2. PAGINATION MATH
+            // PAGINATION
             const totalResults = filtered.length;
             const totalPages = Math.ceil(totalResults / resultsPerPage) || 1;
-            
             if (currentPage > totalPages) currentPage = totalPages;
 
+            // DOM RENDERING
             document.getElementById("resultsCount").innerText = `${totalResults} results found`;
             document.getElementById("totalP").innerText = totalPages;
             document.getElementById("currPage").innerText = currentPage;
-            
-            document.getElementById("prevPage").disabled = (currentPage === 1);
-            document.getElementById("nextPage").disabled = (currentPage === totalPages);
             document.getElementById("paginationControls").style.display = totalResults > 0 ? "flex" : "none";
 
-            // 3. RENDER RESULTS
             const container = document.getElementById("resultsContainer");
             if (totalResults === 0) {
-                container.innerHTML = `
-                    <div class="no-results">
-                        <p>No results found for your search. Please try different keywords or browse categories.</p>
-                    </div>`;
+                container.innerHTML = `<div style="text-align:center; padding: 50px; color:#666;">No relevant results found. Try using broader keywords.</div>`;
             } else {
                 const start = (currentPage - 1) * resultsPerPage;
-                const paginated = filtered.slice(start, start + resultsPerPage);
-                
-                container.innerHTML = paginated.map(item => `
+                container.innerHTML = filtered.slice(start, start + resultsPerPage).map(item => `
                     <div class="result-card">
                         <div class="result-title">${item.l2}</div>
                         <div class="result-ans">${item.answer}</div>
@@ -272,21 +296,21 @@
                 `).join('');
             }
 
-            renderTabs();
+            renderTabs(filteredTokens);
         }
 
-        function renderTabs() {
+        function renderTabs(activeTokens) {
             const container = document.getElementById("tabsContainer");
-            container.innerHTML = Object.keys(filterMap).map(name => {
+            container.innerHTML = Object.keys(categories).map(name => {
                 let count;
-                // Count results for each tab based on current search query
-                const q = searchQuery.toLowerCase();
-                const tabData = name === "All results" ? faqData : faqData.filter(i => filterMap[name].includes(i.l1));
+                const tabL1s = categories[name];
                 
-                count = tabData.filter(item => 
-                    q === "" || item.l2.toLowerCase().includes(q) || item.answer.toLowerCase().includes(q)
-                ).length;
-                
+                if (name === "All results") {
+                    count = faqData.length;
+                } else {
+                    count = faqData.filter(i => tabL1s.includes(i.l1)).length;
+                }
+
                 return `
                     <div class="tab ${name === currentTab ? 'active' : ''}" onclick="setTab('${name}')">
                         ${name} <span class="tab-badge">${count}</span>
@@ -295,36 +319,12 @@
             }).join('');
         }
 
-        window.setTab = (t) => { 
-            currentTab = t; 
-            currentPage = 1; 
-            updateUI(); 
-        };
-
-        document.getElementById("searchInput").addEventListener('input', (e) => {
-            searchQuery = e.target.value;
-            currentPage = 1;
-            updateUI();
-        });
-
-        document.getElementById("searchBtn").onclick = updateUI;
-
-        document.getElementById("prevPage").onclick = () => { 
-            if (currentPage > 1) { currentPage--; updateUI(); window.scrollTo(0, 300); } 
-        };
+        window.setTab = (t) => { currentTab = t; currentPage = 1; updateUI(); };
+        document.getElementById("searchInput").oninput = (e) => { searchQuery = e.target.value; currentPage = 1; updateUI(); };
         
-        document.getElementById("nextPage").onclick = () => { 
-            const totalResults = faqData.filter(item => {
-                const matchTab = currentTab === "All results" || filterMap[currentTab].includes(item.l1);
-                const matchSearch = searchQuery === "" || item.l2.toLowerCase().includes(searchQuery.toLowerCase()) || item.answer.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchTab && matchSearch;
-            }).length;
-            
-            const totalPages = Math.ceil(totalResults / resultsPerPage);
-            if (currentPage < totalPages) { currentPage++; updateUI(); window.scrollTo(0, 300); } 
-        };
+        document.getElementById("prevPage").onclick = () => { if (currentPage > 1) { currentPage--; updateUI(); window.scrollTo(0,300); } };
+        document.getElementById("nextPage").onclick = () => { if (currentPage < Math.ceil(faqData.length/resultsPerPage)) { currentPage++; updateUI(); window.scrollTo(0,300); } };
 
-        // Initialize
         updateUI();
     </script>
 </body>
