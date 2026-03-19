@@ -114,25 +114,16 @@
     <div class="results-section">
         <div class="container">
             <div class="results-meta" id="resultsCount">0 results found</div>
-            <div class="pagination" id="paginationControls">
-                <button id="prevPage" class="page-nav-btn">&lt;</button>
-                <span>Page</span>
-                <div style="border: 1px solid var(--primary-blue); padding: 4px 12px; border-radius: 4px; font-weight: bold; color: var(--primary-blue);">
-                    <span id="currPage">1</span> &nbsp; ▾
-                </div>
-                <span>of <span id="totalP">1</span></span>
-                <button id="nextPage" class="page-nav-btn">&gt;</button>
-            </div>
             <div id="resultsContainer"></div>
         </div>
     </div>
 
     <script>
-        // FULL 58 MAPPINGS DATA
         const faqData = [
             { l1: "I'm a new student and need help getting started", l2: "What should I do if my student visa isn't granted in time to start my course?", answer: "Contact Stop 1 immediately to discuss visa delays, potential late enrolment, or deferral options." },
             { l1: "I'm a new student and need help getting started", l2: "How do I plan my first year and enrol before semester starts?", answer: "Use the My Course Planner tool and follow the step-by-step enrolment instructions in your offer." },
             { l1: "I'm a new student and need help getting started", l2: "What is the Student Learning Entitlement (SLE)?", answer: "The SLE limits the total amount of Commonwealth supported study you can undertake in your lifetime." },
+            { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How is my Weighted Average Mark (WAM) calculated and what counts toward it?", answer: "WAM is your average mark weighted by credit points of each subject." },
             { l1: "I'm considering another course or graduate study", l2: "What are the entry requirements for my course, and are there guaranteed entry pathways?", answer: "Check the Handbook for ATAR, GPA, and prerequisite specifics for graduate entry." },
             { l1: "I'm considering another course or graduate study", l2: "What is Graduate Access Melbourne (GAM), and how do I apply?", answer: "GAM is an equity program; apply through VTAC or the University's graduate portal." },
             { l1: "I'm considering another course or graduate study", l2: "Who can I speak to about graduate coursework study options?", answer: "Book an appointment with Stop 1 or attend a graduate study information session." },
@@ -163,7 +154,6 @@
             { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What should I do if I've been removed from my course for non-enrolment?", answer: "Apply for reinstatement immediately; this may involve a late fee." },
             { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What do I need to do to re-enrol, and what if I miss the deadline?", answer: "Re-enrol via eStudent; missing the deadline may risk your place." },
             { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What is a concurrent diploma, and how does it work?", answer: "A separate diploma taken alongside your main degree." },
-            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I change how a subject counts across my Bachelor and concurrent diploma?", answer: "Request a cross-credit transfer via Stop 1." },
             { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How do I access ongoing support, including an Academic Adjustment Plan (AAP)?", answer: "Register with Student Equity and Disability Support (SEDS) with medical documentation." },
             { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What support can I get if circumstances affect my assessments?", answer: "Apply for Special Consideration if unexpected illness or hardship impacts your performance." },
             { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What should I do if I fail a subject?", answer: "Consult a course advisor to see how the fail impacts your progression." },
@@ -179,17 +169,17 @@
             { l1: "I have questions about credit from my previous study", l2: "Can I enrol in subjects while my credit application is being assessed?", answer: "Yes, but avoid enrolling in the exact subjects you seek credit for." },
             { l1: "I have questions about credit from my previous study", l2: "Can I get an exemption for my Discovery subject?", answer: "Rarely; Discovery subjects are unique to Melbourne." },
             { l1: "I have questions about credit from my previous study", l2: "Can I remove advanced standing (credit) that's already been applied?", answer: "Yes, via a formal request if you prefer to take the subject here." },
+            { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I change how a subject counts across my Bachelor and concurrent diploma?", answer: "Request a cross-credit transfer via Stop 1." },
             { l1: "I want to study overseas as part of my course", l2: "What do I need to know about going on exchange?", answer: "Check partner universities, WAM requirements, and deadlines." },
             { l1: "I want to study overseas as part of my course", l2: "Do course progression rules still apply while I'm on exchange?", answer: "Yes; ensure overseas subjects meet degree requirements." },
             { l1: "I want to study overseas as part of my course", l2: "What do I need to know about going on exchange in my final semester?", answer: "This may delay graduation if overseas results are late." },
             { l1: "I want to study overseas as part of my course", l2: "Can I study overseas as part of my course?", answer: "Yes, via exchange or study abroad programs." },
             { l1: "I want to study overseas as part of my course", l2: "Will studying on exchange affect my WAM?", answer: "Usually recorded as Pass/Fail and doesn't impact WAM." },
-            { l1: "I want to study overseas as part of my course", l2: "How do I know which exchange subjects will count for credit?", answer: "Submit a study plan to your faculty for pre-approval." },
-            { l1: "I want to study overseas as part of my course", l2: "What is the difference between Exchange and Study Abroad?", answer: "Exchange is with partner universities; Study Abroad is with any accredited institution." }
+            { l1: "I want to study overseas as part of my course", l2: "How do I know which exchange subjects will count for credit?", answer: "Submit a study plan to your faculty for pre-approval." }
         ];
 
-        // LOGIC & ALGORITHM
-        const stopWords = new Set(["how", "do", "i", "for", "an", "the", "a", "is", "can", "to", "what", "should", "my", "me", "with", "about"]);
+        const stopWords = new Set(["how", "do", "i", "for", "an", "the", "a", "is", "can", "to", "what", "should", "my", "me", "with", "about", "where", "does"]);
+        
         const synonymMap = {
             "swap": ["change", "transfer"],
             "change": ["swap", "transfer"],
@@ -197,7 +187,12 @@
             "visa": ["international", "overseas"],
             "classes": ["subjects", "enrolment"],
             "money": ["fees", "financial", "entitlement"],
-            "points": ["wam", "credit", "standing"]
+            "points": ["wam", "credit", "standing"],
+            "sick": ["special consideration", "assessment", "support", "illness", "medical"],
+            "exm": ["exam", "assessment"],
+            "mark": ["result", "wam", "grade"],
+            "enrollment": ["enrolment", "enrol"],
+            "overseas": ["exchange", "abroad"]
         };
 
         const categories = {
@@ -216,16 +211,11 @@
 
         let currentTab = "All results";
         let searchQuery = "";
-        let currentPage = 1;
-        const resultsPerPage = 12;
 
         function updateUI() {
             const rawInput = searchQuery.trim().toLowerCase();
-            // 1. TEXT CLEANING (Normalization)
             const cleanInput = rawInput.replace(/[^\w\s]/gi, '');
-            // 1. TOKENIZATION
             const tokens = cleanInput.split(/\s+/).filter(t => t.length > 0);
-            // 2. NOISE REDUCTION
             const filteredTokens = tokens.filter(t => !stopWords.has(t));
 
             let scoredResults = faqData.map(item => {
@@ -234,61 +224,50 @@
                 const content = item.answer.toLowerCase();
 
                 if (rawInput.length > 0) {
-                    // 4. SMART SCORING - Exact Phrase Match (+150)
                     if (title.includes(rawInput)) score += 150;
 
                     filteredTokens.forEach(token => {
-                        // 4. SMART SCORING - Exact Word Match (+40) via Regex
                         const regex = new RegExp(`\\b${token}\\b`, 'i');
                         if (regex.test(title)) score += 40;
 
-                        // 3. CONCEPT LINKING - Synonym Match (+30)
+                        // Check Synonyms
                         if (synonymMap[token]) {
                             synonymMap[token].forEach(syn => {
-                                const synRegex = new RegExp(`\\b${syn}\\b`, 'i');
-                                if (synRegex.test(title)) score += 30;
+                                if (title.includes(syn)) score += 30;
                             });
                         }
 
-                        // 4. SMART SCORING - Content Deep-Dive (+20)
-                        if (regex.test(content)) score += 20;
+                        // Fuzzy Logic for common typos (e.g., exm -> exam)
+                        if (!regex.test(title)) {
+                            Object.keys(synonymMap).forEach(key => {
+                                if (token.length > 2 && key.includes(token)) score += 20;
+                            });
+                        }
+
+                        if (regex.test(content)) score += 30; // Increased content weight
                     });
                 } else {
-                    // Default view points for popularity
                     score = 100; 
                 }
 
                 return { ...item, score };
             });
 
-            // 5. QUALITY CONTROL - Relevance Threshold (20 points)
             let filtered = scoredResults.filter(item => item.score >= 20);
 
-            // TAB FILTERING
             if (currentTab !== "All results") {
                 filtered = filtered.filter(item => categories[currentTab].includes(item.l1));
             }
 
-            // SORTING BY SCORE
             filtered.sort((a, b) => b.score - a.score);
 
-            // PAGINATION
-            const totalResults = filtered.length;
-            const totalPages = Math.ceil(totalResults / resultsPerPage) || 1;
-            if (currentPage > totalPages) currentPage = totalPages;
-
-            // DOM RENDERING
-            document.getElementById("resultsCount").innerText = `${totalResults} results found`;
-            document.getElementById("totalP").innerText = totalPages;
-            document.getElementById("currPage").innerText = currentPage;
-            document.getElementById("paginationControls").style.display = totalResults > 0 ? "flex" : "none";
-
             const container = document.getElementById("resultsContainer");
-            if (totalResults === 0) {
+            document.getElementById("resultsCount").innerText = `${filtered.length} results found`;
+
+            if (filtered.length === 0) {
                 container.innerHTML = `<div style="text-align:center; padding: 50px; color:#666;">No relevant results found. Try using broader keywords.</div>`;
             } else {
-                const start = (currentPage - 1) * resultsPerPage;
-                container.innerHTML = filtered.slice(start, start + resultsPerPage).map(item => `
+                container.innerHTML = filtered.map(item => `
                     <div class="result-card">
                         <div class="result-title">${item.l2}</div>
                         <div class="result-ans">${item.answer}</div>
@@ -296,20 +275,15 @@
                 `).join('');
             }
 
-            renderTabs(filteredTokens);
+            renderTabs();
         }
 
-        function renderTabs(activeTokens) {
+        function renderTabs() {
             const container = document.getElementById("tabsContainer");
             container.innerHTML = Object.keys(categories).map(name => {
                 let count;
-                const tabL1s = categories[name];
-                
-                if (name === "All results") {
-                    count = faqData.length;
-                } else {
-                    count = faqData.filter(i => tabL1s.includes(i.l1)).length;
-                }
+                if (name === "All results") count = faqData.length;
+                else count = faqData.filter(i => categories[name].includes(i.l1)).length;
 
                 return `
                     <div class="tab ${name === currentTab ? 'active' : ''}" onclick="setTab('${name}')">
@@ -319,12 +293,9 @@
             }).join('');
         }
 
-        window.setTab = (t) => { currentTab = t; currentPage = 1; updateUI(); };
-        document.getElementById("searchInput").oninput = (e) => { searchQuery = e.target.value; currentPage = 1; updateUI(); };
+        window.setTab = (t) => { currentTab = t; updateUI(); };
+        document.getElementById("searchInput").oninput = (e) => { searchQuery = e.target.value; updateUI(); };
         
-        document.getElementById("prevPage").onclick = () => { if (currentPage > 1) { currentPage--; updateUI(); window.scrollTo(0,300); } };
-        document.getElementById("nextPage").onclick = () => { if (currentPage < Math.ceil(faqData.length/resultsPerPage)) { currentPage++; updateUI(); window.scrollTo(0,300); } };
-
         updateUI();
     </script>
 </body>
