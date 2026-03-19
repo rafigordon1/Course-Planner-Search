@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Visa Support Page</title>
+    <style>
+        :root {
+            --primary-blue: #003057;
+            --link-blue: #1a0dab;
+            --bg-highlight: #fde2f3; /* Pink header */
+            --bg-important: #fae1cd; /* Light orange box */
+            --bg-appointment: #d0ebff; /* Light blue box */
+            --text-main: #333;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 8px;
+        }
+
+        /* Top Pink Header */
+        .header-status {
+            background-color: var(--bg-highlight);
+            padding: 4px 12px;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        a {
+            color: var(--link-blue);
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        strong {
+            font-weight: 700;
+        }
+
+        /* Important Info Box */
+        .important-box {
+            background-color: var(--bg-important);
+            margin: 30px 0;
+        }
+
+        .important-header {
+            background-color: #f1cbb0;
+            padding: 8px 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .important-content {
+            padding: 15px 20px;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Appointment Section */
+        .appointment-section {
+            margin-top: 40px;
+        }
+
+        .appointment-header {
+            background-color: var(--bg-appointment);
+            padding: 8px 15px;
+            color: var(--primary-blue);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .appointment-cta {
+            background-color: #e3f2fd;
+            padding: 12px 15px;
+            margin-top: 10px;
+        }
+
+        .btn-print {
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-print:hover {
+            opacity: 0.9;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 20px; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-status">1.1. What should I do if my student visa isn't granted in time to start my course?</div>
+
+    <h1>Getting your student visa in time to start your course</h1>
+
+    <p>If you plan to study on a <strong>student visa</strong>, you must be <strong>in Australia to start your course</strong>. Student visa holders can't study fully online due to <strong>online study limitations</strong> (<a href="#">https://students.unimelb.edu.au/student-support/international-student-support/visas/visa-implications-of-changing-your-enrolment/online-study-limitations</a>).</p>
+
+    <h2>When you need to arrive</h2>
+
+    <p>If you're a <strong>commencing student</strong>, aim to arrive by <strong>orientation week</strong> or your <strong>earliest subject start date</strong>. Start dates are listed in the <strong>Handbook</strong> (<a href="#">https://handbook.unimelb.edu.au/search</a>).</p>
+
+    <p>Most courses <strong>don't allow students to start after the end of Week 2</strong> of semester.</p>
+
+    <h2>If your visa is delayed</h2>
+
+    <p>If you can't arrive by the <strong>end of Week 2</strong> due to visa delays, you're strongly advised <strong><a href="#">to apply</a> to defer your offer</strong> to a later intake, if your course allows (<a href="#">https://students.unimelb.edu.au/new-students/defer-or-decline-your-offer/defer-my-offer</a>).</p>
+
+    <div class="important-box">
+        <div class="important-header">Important to know</div>
+        <div class="important-content">
+            <ul>
+                <li>You may be recorded as a <strong>non-commencing student</strong> if you don't arrive on time.</li>
+                <li>Your <strong>Confirmation of Enrolment (CoE)</strong> may be ended.</li>
+                <li>This can affect your <strong>current or future visa</strong>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="appointment-section">
+        <div class="appointment-header">Need advice about your situation?</div>
+        <div class="appointment-cta">
+            Book an <strong>appointment</strong> (Link TBC) to get advice on visa delays, deferral options, and next steps.
+        </div>
+    </div>
+
+    <button class="btn-print" id="printBtn">Save as PDF / Print Page</button>
+</div>
+
+<script>
+    document.getElementById('printBtn').addEventListener('click', function() {
+        // Hiding the button before printing
+        this.style.display = 'none';
+        window.print();
+        // Showing it back after print dialog closes
+        setTimeout(() => {
+            this.style.display = 'block';
+        }, 1000);
+    });
+</script>
+
+</body>
+</html>
