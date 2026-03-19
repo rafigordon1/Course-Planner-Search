@@ -114,6 +114,17 @@
     <div class="results-section">
         <div class="container">
             <div class="results-meta" id="resultsCount">0 results found</div>
+            
+            <div class="pagination" id="paginationControls">
+                <button id="prevPage" class="page-nav-btn">&lt;</button>
+                <span>Page</span>
+                <div style="border: 1px solid var(--primary-blue); padding: 4px 12px; border-radius: 4px; font-weight: bold; color: var(--primary-blue);">
+                    <span id="currPage">1</span> &nbsp; ▾
+                </div>
+                <span>of <span id="totalP">1</span></span>
+                <button id="nextPage" class="page-nav-btn">&gt;</button>
+            </div>
+
             <div id="resultsContainer"></div>
         </div>
     </div>
@@ -211,6 +222,8 @@
 
         let currentTab = "All results";
         let searchQuery = "";
+        let currentPage = 1;
+        const resultsPerPage = 12;
 
         function updateUI() {
             const rawInput = searchQuery.trim().toLowerCase();
@@ -230,21 +243,19 @@
                         const regex = new RegExp(`\\b${token}\\b`, 'i');
                         if (regex.test(title)) score += 40;
 
-                        // Check Synonyms
                         if (synonymMap[token]) {
                             synonymMap[token].forEach(syn => {
                                 if (title.includes(syn)) score += 30;
                             });
                         }
 
-                        // Fuzzy Logic for common typos (e.g., exm -> exam)
                         if (!regex.test(title)) {
                             Object.keys(synonymMap).forEach(key => {
                                 if (token.length > 2 && key.includes(token)) score += 20;
                             });
                         }
 
-                        if (regex.test(content)) score += 30; // Increased content weight
+                        if (regex.test(content)) score += 30;
                     });
                 } else {
                     score = 100; 
@@ -253,21 +264,41 @@
                 return { ...item, score };
             });
 
+            // Relevance Threshold
             let filtered = scoredResults.filter(item => item.score >= 20);
 
+            // Category Filter
             if (currentTab !== "All results") {
                 filtered = filtered.filter(item => categories[currentTab].includes(item.l1));
             }
 
             filtered.sort((a, b) => b.score - a.score);
 
-            const container = document.getElementById("resultsContainer");
-            document.getElementById("resultsCount").innerText = `${filtered.length} results found`;
+            // PAGINATION LOGIC (Strictly 12 per page)
+            const totalResults = filtered.length;
+            const totalPages = Math.ceil(totalResults / resultsPerPage) || 1;
+            
+            if (currentPage > totalPages) currentPage = totalPages;
 
-            if (filtered.length === 0) {
+            document.getElementById("resultsCount").innerText = `${totalResults} results found`;
+            document.getElementById("totalP").innerText = totalPages;
+            document.getElementById("currPage").innerText = currentPage;
+            
+            // Toggle visibility of pagination based on result count
+            const paginationControls = document.getElementById("paginationControls");
+            paginationControls.style.display = totalResults > 0 ? "flex" : "none";
+            
+            document.getElementById("prevPage").disabled = (currentPage === 1);
+            document.getElementById("nextPage").disabled = (currentPage === totalPages);
+
+            const container = document.getElementById("resultsContainer");
+            if (totalResults === 0) {
                 container.innerHTML = `<div style="text-align:center; padding: 50px; color:#666;">No relevant results found. Try using broader keywords.</div>`;
             } else {
-                container.innerHTML = filtered.map(item => `
+                const startIndex = (currentPage - 1) * resultsPerPage;
+                const paginatedResults = filtered.slice(startIndex, startIndex + resultsPerPage);
+                
+                container.innerHTML = paginatedResults.map(item => `
                     <div class="result-card">
                         <div class="result-title">${item.l2}</div>
                         <div class="result-ans">${item.answer}</div>
@@ -293,8 +324,35 @@
             }).join('');
         }
 
-        window.setTab = (t) => { currentTab = t; updateUI(); };
-        document.getElementById("searchInput").oninput = (e) => { searchQuery = e.target.value; updateUI(); };
+        window.setTab = (t) => { 
+            currentTab = t; 
+            currentPage = 1; 
+            updateUI(); 
+        };
+
+        document.getElementById("searchInput").oninput = (e) => { 
+            searchQuery = e.target.value; 
+            currentPage = 1; 
+            updateUI(); 
+        };
+
+        document.getElementById("prevPage").onclick = () => { 
+            if (currentPage > 1) { 
+                currentPage--; 
+                updateUI(); 
+                window.scrollTo(0, 300); 
+            } 
+        };
+
+        document.getElementById("nextPage").onclick = () => { 
+            const totalResults = document.getElementById("resultsCount").innerText.split(' ')[0];
+            const totalPages = Math.ceil(parseInt(totalResults) / resultsPerPage);
+            if (currentPage < totalPages) { 
+                currentPage++; 
+                updateUI(); 
+                window.scrollTo(0, 300); 
+            } 
+        };
         
         updateUI();
     </script>
