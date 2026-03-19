@@ -50,6 +50,7 @@
             display: flex;
             align-items: center;
             border: 1px solid transparent;
+            transition: all 0.2s ease;
         }
         .tab.active { background-color: var(--active-tab-blue); color: white; }
         .tab-badge {
@@ -65,7 +66,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .results-section { padding: 40px 20px; }
+        .results-section { padding: 40px 20px; min-height: 400px; }
         .results-meta { font-size: 15px; color: #666; margin-bottom: 25px; }
 
         .pagination { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
@@ -80,23 +81,13 @@
         }
         .page-nav-btn:disabled { opacity: 0.3; cursor: default; }
 
-        .page-dropdown {
-            display: flex;
-            align-items: center;
-            border: 1px solid var(--primary-blue);
-            border-radius: 4px;
-            padding: 4px 12px;
-            background: white;
-            font-weight: bold;
-            color: var(--primary-blue);
-        }
-
         .result-card {
             border: 1px solid var(--border-grey);
             border-left: 6px solid var(--accent-teal);
             padding: 30px;
             margin-bottom: 20px;
             border-radius: 2px;
+            background: #fff;
         }
         .result-title {
             font-size: 20px;
@@ -104,10 +95,16 @@
             color: black;
             margin-bottom: 12px;
             text-decoration: none;
-            display: inline-block;
+            display: block;
         }
-        .result-title:hover { color: var(--hover-blue); text-decoration: underline; cursor: pointer; }
+        .result-title:hover { color: var(--hover-blue); cursor: pointer; }
         .result-ans { color: #4B5563; font-size: 16px; line-height: 1.6; }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -132,10 +129,12 @@
     <div class="results-section">
         <div class="container">
             <div class="results-meta" id="resultsCount">0 results found</div>
-            <div class="pagination">
+            <div class="pagination" id="paginationControls">
                 <button id="prevPage" class="page-nav-btn">&lt;</button>
                 <span>Page</span>
-                <div class="page-dropdown"><span id="currPage">1</span> &nbsp; ▾</div>
+                <div style="border: 1px solid var(--primary-blue); padding: 4px 12px; border-radius: 4px; font-weight: bold; color: var(--primary-blue);">
+                    <span id="currPage">1</span> &nbsp; ▾
+                </div>
                 <span>of <span id="totalP">1</span></span>
                 <button id="nextPage" class="page-nav-btn">&gt;</button>
             </div>
@@ -144,12 +143,10 @@
     </div>
 
     <script>
-        // FULL 58 MAPPING DATASET
         const faqData = [
             { l1: "I'm a new student and need help getting started", l2: "What should I do if my student visa isn't granted in time to start my course?", answer: "Contact Stop 1 immediately to discuss visa delays, potential late enrolment, or deferral options." },
             { l1: "I'm a new student and need help getting started", l2: "How do I plan my first year and enrol before semester starts?", answer: "Use the My Course Planner tool and follow the step-by-step enrolment instructions in your offer." },
             { l1: "I'm a new student and need help getting started", l2: "What is the Student Learning Entitlement (SLE)?", answer: "The SLE limits the total amount of Commonwealth supported study you can undertake in your lifetime." },
-            { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How is my Weighted Average Mark (WAM) calculated and what counts toward it?", answer: "WAM is your average mark weighted by the credit point value of each subject completed." },
             { l1: "I'm considering another course or graduate study", l2: "What are the entry requirements for my course, and are there guaranteed entry pathways?", answer: "Check the Handbook for ATAR, GPA, and prerequisite specifics for graduate entry." },
             { l1: "I'm considering another course or graduate study", l2: "What is Graduate Access Melbourne (GAM), and how do I apply?", answer: "GAM is an equity program; apply through VTAC or the University's graduate portal." },
             { l1: "I'm considering another course or graduate study", l2: "Who can I speak to about graduate coursework study options?", answer: "Book an appointment with Stop 1 or attend a graduate study information session." },
@@ -207,24 +204,16 @@
 
         const filterMap = {
             "All results": [],
-            "New Student": [
-                "I'm a new student and need help getting started"
-            ],
+            "New Student": ["I'm a new student and need help getting started"],
             "Subjects & Courses": [
                 "I'm considering another course or graduate study",
                 "I need help choosing, changing, or planning my subjects",
                 "I need help enrolling and managing my study plan for my course or concurrent diploma",
                 "I need to understand my course structure, majors/minors and study load"
             ],
-            "Assessments": [
-                "I need support with exams, assessments, results, or ongoing circumstances affecting my study"
-            ],
-            "Credits": [
-                "I have questions about credit from my previous study"
-            ],
-            "Exchange": [
-                "I want to study overseas as part of my course"
-            ]
+            "Assessments": ["I need support with exams, assessments, results, or ongoing circumstances affecting my study"],
+            "Credits": ["I have questions about credit from my previous study"],
+            "Exchange": ["I want to study overseas as part of my course"]
         };
 
         let currentTab = "All results";
@@ -233,36 +222,28 @@
         const resultsPerPage = 12;
 
         function updateUI() {
-            // 1. FILTERING LOGIC
+            // 1. FILTERING
             let filtered = faqData;
 
-            // Apply category filter
+            // First apply Tab filter
             if (currentTab !== "All results") {
                 filtered = filtered.filter(item => filterMap[currentTab].includes(item.l1));
             }
 
-            // Apply search algorithm
+            // Then apply Search filter
             if (searchQuery.trim() !== "") {
                 const q = searchQuery.toLowerCase();
                 filtered = filtered.filter(item => 
                     item.l2.toLowerCase().includes(q) || 
                     item.answer.toLowerCase().includes(q)
-                ).sort((a, b) => {
-                    // Relevance sorting: Title match is higher than answer match
-                    const aTitleMatch = a.l2.toLowerCase().includes(q);
-                    const bTitleMatch = b.l2.toLowerCase().includes(q);
-                    if (aTitleMatch && !bTitleMatch) return -1;
-                    if (!aTitleMatch && bTitleMatch) return 1;
-                    return 0;
-                });
+                );
             }
 
-            // 2. PAGINATION LOGIC
+            // 2. PAGINATION MATH
             const totalResults = filtered.length;
             const totalPages = Math.ceil(totalResults / resultsPerPage) || 1;
             
             if (currentPage > totalPages) currentPage = totalPages;
-            if (currentPage < 1) currentPage = 1;
 
             document.getElementById("resultsCount").innerText = `${totalResults} results found`;
             document.getElementById("totalP").innerText = totalPages;
@@ -270,13 +251,20 @@
             
             document.getElementById("prevPage").disabled = (currentPage === 1);
             document.getElementById("nextPage").disabled = (currentPage === totalPages);
+            document.getElementById("paginationControls").style.display = totalResults > 0 ? "flex" : "none";
 
             // 3. RENDER RESULTS
             const container = document.getElementById("resultsContainer");
             if (totalResults === 0) {
-                container.innerHTML = `<div style="padding: 40px; text-align: center; color: #666;">No results found for your search. Please try different keywords or browse categories.</div>`;
+                container.innerHTML = `
+                    <div class="no-results">
+                        <p>No results found for your search. Please try different keywords or browse categories.</p>
+                    </div>`;
             } else {
-                container.innerHTML = filtered.slice((currentPage - 1) * resultsPerPage, currentPage * resultsPerPage).map(item => `
+                const start = (currentPage - 1) * resultsPerPage;
+                const paginated = filtered.slice(start, start + resultsPerPage);
+                
+                container.innerHTML = paginated.map(item => `
                     <div class="result-card">
                         <div class="result-title">${item.l2}</div>
                         <div class="result-ans">${item.answer}</div>
@@ -291,11 +279,13 @@
             const container = document.getElementById("tabsContainer");
             container.innerHTML = Object.keys(filterMap).map(name => {
                 let count;
-                if (name === "All results") {
-                    count = faqData.length;
-                } else {
-                    count = faqData.filter(i => filterMap[name].includes(i.l1)).length;
-                }
+                // Count results for each tab based on current search query
+                const q = searchQuery.toLowerCase();
+                const tabData = name === "All results" ? faqData : faqData.filter(i => filterMap[name].includes(i.l1));
+                
+                count = tabData.filter(item => 
+                    q === "" || item.l2.toLowerCase().includes(q) || item.answer.toLowerCase().includes(q)
+                ).length;
                 
                 return `
                     <div class="tab ${name === currentTab ? 'active' : ''}" onclick="setTab('${name}')">
@@ -305,7 +295,6 @@
             }).join('');
         }
 
-        // Event Handlers
         window.setTab = (t) => { 
             currentTab = t; 
             currentPage = 1; 
@@ -318,21 +307,21 @@
             updateUI();
         });
 
+        document.getElementById("searchBtn").onclick = updateUI;
+
         document.getElementById("prevPage").onclick = () => { 
-            if (currentPage > 1) { 
-                currentPage--; 
-                updateUI(); 
-                window.scrollTo({ top: 300, behavior: 'smooth' }); 
-            } 
+            if (currentPage > 1) { currentPage--; updateUI(); window.scrollTo(0, 300); } 
         };
         
         document.getElementById("nextPage").onclick = () => { 
-            const totalPages = Math.ceil(faqData.length / resultsPerPage);
-            if (currentPage < totalPages) { 
-                currentPage++; 
-                updateUI(); 
-                window.scrollTo({ top: 300, behavior: 'smooth' }); 
-            } 
+            const totalResults = faqData.filter(item => {
+                const matchTab = currentTab === "All results" || filterMap[currentTab].includes(item.l1);
+                const matchSearch = searchQuery === "" || item.l2.toLowerCase().includes(searchQuery.toLowerCase()) || item.answer.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchTab && matchSearch;
+            }).length;
+            
+            const totalPages = Math.ceil(totalResults / resultsPerPage);
+            if (currentPage < totalPages) { currentPage++; updateUI(); window.scrollTo(0, 300); } 
         };
 
         // Initialize
