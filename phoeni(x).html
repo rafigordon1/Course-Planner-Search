@@ -2,90 +2,107 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Mathematical Phoenix - Final Refinement</title>
+    <title>Mathematical Phoenix - Advanced Harmonic Edition</title>
     <style>
-        body { margin: 0; background: #fff; overflow: hidden; font-family: serif; }
-        #info { position: absolute; top: 20px; left: 20px; width: 300px; z-index: 10; font-size: 12px; pointer-events: none; }
+        body { margin: 0; background: #fff; overflow: hidden; font-family: 'Georgia', serif; }
+        #ui { position: absolute; top: 30px; left: 30px; width: 320px; z-index: 100; background: rgba(255,255,255,0.9); padding: 20px; border-left: 3px solid #000; pointer-events: none; }
+        h2 { margin: 0 0 10px 0; font-size: 18px; text-transform: uppercase; letter-spacing: 2px; }
+        .formula { font-family: 'Courier New', monospace; font-size: 11px; background: #f4f4f4; padding: 10px; border-radius: 4px; overflow-x: hidden; }
     </style>
 </head>
 <body>
 
-<div id="info">
-    <h2>Phoenix v2.0</h2>
-    <p><i>Parametric System:</i></p>
-    <b>X(k)</b> = cos(θ) * (R + f(k))<br>
-    <b>Y(k)</b> = sin(θ) * (R + f(k))<br>
-    <p>Using 12,000 harmonic circles to emulate the flowing "S" structure of the reference.</p>
+<div id="ui">
+    <h2>Phoenix Composition</h2>
+    <p style="font-size: 13px; font-style: italic;">Based on the harmonic filaments of the original reference image.</p>
+    <div class="formula">
+        X(k) = S_x(k) + Σ[W_i · sin(f_i · k)^p]<br>
+        Y(k) = S_y(k) + Σ[H_i · cos(g_i · k)^p]<br>
+        R(k) = 0.4 + 1.2 · |sin(πk/N)|^10
+    </div>
+    <p style="font-size: 11px; color: #666;">Each line represents a harmonic filament calculated at high frequency to simulate organic plumage.</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
 <script>
-    let k = 0;
-    const totalCircles = 12000;
+    let k = 1;
+    const N = 15000; // Increased density for "feather" texture
+    const speed = 60; // Circles per frame
 
     function setup() {
         createCanvas(windowWidth, windowHeight);
         background(255);
         noFill();
-        stroke(0, 0, 0, 80); // Softer stroke for better "feather" layering
-        strokeWeight(0.4);
+        stroke(0, 0, 0, 110); 
+        strokeWeight(0.35);
     }
 
     function draw() {
-        // Draw 40 circles per frame for a "writing" effect
-        for (let i = 0; i < 40; i++) {
-            if (k < totalCircles) {
-                drawPhoenixPart(k);
+        for (let i = 0; i < speed; i++) {
+            if (k <= N) {
+                renderPhoenix(k);
                 k++;
             }
         }
     }
 
-    function drawPhoenixPart(index) {
-        let t = map(index, 0, totalCircles, 0, 1);
+    function renderPhoenix(index) {
+        let t = index / N;
         let centerX = width / 2;
-        let centerY = height / 2;
-        
-        let x, y, r;
+        let centerY = height * 0.45;
+        let scale = min(width, height) * 0.8;
 
-        // 1. THE MAIN BODY (The "S" Curve)
-        // We use a combination of two sine waves to create the vertical swirl
-        let bodyAngle = t * TWO_PI * 1.5;
-        let bodyX = 150 * sin(bodyAngle) * cos(t * PI);
-        let bodyY = 400 * t - 200 + 50 * cos(bodyAngle);
+        // 1. THE SPINE (The "S" flow)
+        // This defines the core path the bird follows
+        let spineX = 0.15 * sin(TWO_PI * t * 1.2) * scale;
+        let spineY = (t - 0.5) * scale;
 
-        // 2. THE FEATHERS/WINGS
-        // High frequency oscillations that grow out from the body
-        let wingFrequency = 80; 
-        let wingSpread = sin(index * 0.1) * (t * 200);
-        
-        // This adds the "shredded" look of the feathers in the reference
-        let featherDetail = pow(sin(t * PI * wingFrequency), 10) * 100 * t;
+        // 2. THE WING & PLUME SYSTEM
+        // We use high powers (14, 20, 30) to create "spikes" that look like feathers
+        let featherFreq = 45; 
+        let featherLength = 0;
+        let angleOffset = 0;
 
-        if (t < 0.7) {
-            // Upper Wing Section
-            x = centerX + bodyX + (featherDetail * cos(bodyAngle * 0.5));
-            y = centerY + bodyY - (featherDetail * sin(bodyAngle * 0.2));
-            r = 0.5 + t * 2;
-        } else {
-            // Tail Section - Swirling down
-            let tailSwirl = (t - 0.7) * 10;
-            x = centerX + bodyX + 150 * sin(tailSwirl) * t;
-            y = centerY + bodyY + 100 * cos(tailSwirl);
-            r = 0.3 + (1-t) * 3;
+        if (t < 0.2) { 
+            // THE HEAD & BEAK
+            featherLength = 0.05 * pow(abs(sin(t * PI * 100)), 30) * scale;
+            angleOffset = PI * 0.5;
+        } else if (t < 0.6) { 
+            // THE MAIN WINGS
+            // This creates the broad "fanning" effect
+            let wingPower = pow(abs(sin(t * PI * featherFreq)), 18);
+            featherLength = 0.4 * wingPower * sin(t * PI) * scale;
+            angleOffset = map(t, 0.2, 0.6, -PI/4, -PI * 1.2);
+        } else { 
+            // THE TAIL PLUMES
+            // Long, flowing, swirling strands
+            let tailPower = pow(abs(sin(t * PI * 12)), 10);
+            featherLength = 0.5 * tailPower * pow(t, 2) * scale;
+            angleOffset = PI * 0.8 + sin(t * 10);
         }
 
-        // Add a bit of "Naderi Yeganeh" complexity: a secondary circle center
-        let finalX = x + 20 * pow(sin(index * 0.5), 7);
-        let finalY = y + 10 * pow(cos(index * 0.5), 7);
+        // Calculate final coordinates using the spine as the origin for feathers
+        let x = centerX + spineX + featherLength * cos(angleOffset);
+        let y = centerY + spineY + featherLength * sin(angleOffset);
+        
+        // Varying radius to make the "tips" of feathers finer
+        let r = (0.5 + 1.5 * (1 - featherLength / (0.5 * scale)));
 
-        ellipse(finalX, finalY, r * 2);
+        // Draw the circle
+        ellipse(x, y, r * 2);
+
+        // Add "Spine Detail" (the dense black core line)
+        if (index % 5 == 0) {
+            strokeWeight(0.1);
+            ellipse(centerX + spineX, centerY + spineY, 1, 1);
+            strokeWeight(0.35);
+        }
     }
 
     function windowResized() {
         resizeCanvas(windowWidth, windowHeight);
         background(255);
-        k = 0;
+        k = 1;
     }
 </script>
 </body>
