@@ -2,108 +2,127 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Mathematical Phoenix - Advanced Harmonic Edition</title>
+    <title>Advanced Mathematical Phoenix - Anatomical Realism</title>
     <style>
-        body { margin: 0; background: #fff; overflow: hidden; font-family: 'Georgia', serif; }
-        #ui { position: absolute; top: 30px; left: 30px; width: 320px; z-index: 100; background: rgba(255,255,255,0.9); padding: 20px; border-left: 3px solid #000; pointer-events: none; }
-        h2 { margin: 0 0 10px 0; font-size: 18px; text-transform: uppercase; letter-spacing: 2px; }
-        .formula { font-family: 'Courier New', monospace; font-size: 11px; background: #f4f4f4; padding: 10px; border-radius: 4px; overflow-x: hidden; }
+        body { margin: 0; background: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        #description { position: absolute; top: 20px; left: 20px; width: 320px; font-family: 'Garamond', serif; pointer-events: none; background: rgba(255,255,255,0.8); padding: 15px; border: 1px solid #ddd; }
+        canvas { box-shadow: 0 0 20px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
-<div id="ui">
-    <h2>Phoenix Composition</h2>
-    <p style="font-size: 13px; font-style: italic;">Based on the harmonic filaments of the original reference image.</p>
-    <div class="formula">
-        X(k) = S_x(k) + Σ[W_i · sin(f_i · k)^p]<br>
-        Y(k) = S_y(k) + Σ[H_i · cos(g_i · k)^p]<br>
-        R(k) = 0.4 + 1.2 · |sin(πk/N)|^10
-    </div>
-    <p style="font-size: 11px; color: #666;">Each line represents a harmonic filament calculated at high frequency to simulate organic plumage.</p>
+<div id="description">
+    <h3 style="margin-top:0">The Phoenix Equations</h3>
+    <p style="font-size: 13px;">A high-order parametric system where each circle's position $(X_k, Y_k)$ is a composite of localized anatomical harmonics.</p>
+    <code style="font-size: 11px; display: block; background: #eee; padding: 5px;">
+        X(k) = Σ [Pos_x + Feather_x(k, ω, p)]<br>
+        Y(k) = Σ [Pos_y + Feather_y(k, ω, p)]<br>
+        R(k) = Base_r * sin(πk/N)^12
+    </code>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
 <script>
-    let k = 1;
-    const N = 15000; // Increased density for "feather" texture
-    const speed = 60; // Circles per frame
+    let k = 0;
+    const N = 20000; // High density for realistic plumage
+    const batchSize = 120; // Drawing speed
 
     function setup() {
         createCanvas(windowWidth, windowHeight);
         background(255);
         noFill();
-        stroke(0, 0, 0, 110); 
-        strokeWeight(0.35);
+        stroke(0, 0, 0, 90);
+        strokeWeight(0.2);
     }
 
     function draw() {
-        for (let i = 0; i < speed; i++) {
-            if (k <= N) {
-                renderPhoenix(k);
+        for (let i = 0; i < batchSize; i++) {
+            if (k < N) {
+                drawRealisticPart(k);
                 k++;
             }
         }
     }
 
-    function renderPhoenix(index) {
+    function drawRealisticPart(index) {
         let t = index / N;
         let centerX = width / 2;
-        let centerY = height * 0.45;
-        let scale = min(width, height) * 0.8;
+        let centerY = height / 2;
+        let scale = min(width, height) * 0.45;
 
-        // 1. THE SPINE (The "S" flow)
-        // This defines the core path the bird follows
-        let spineX = 0.15 * sin(TWO_PI * t * 1.2) * scale;
-        let spineY = (t - 0.5) * scale;
+        let x = 0, y = 0, r = 0.5;
 
-        // 2. THE WING & PLUME SYSTEM
-        // We use high powers (14, 20, 30) to create "spikes" that look like feathers
-        let featherFreq = 45; 
-        let featherLength = 0;
-        let angleOffset = 0;
+        // 1. ANATOMICAL SKELETON (The "S" Spine)
+        let spineX = 0.1 * sin(TWO_PI * t * 0.8);
+        let spineY = (t - 0.5) * 1.8;
 
-        if (t < 0.2) { 
+        // 2. MODULAR ANATOMY LOGIC
+        if (t < 0.05) { 
             // THE HEAD & BEAK
-            featherLength = 0.05 * pow(abs(sin(t * PI * 100)), 30) * scale;
-            angleOffset = PI * 0.5;
-        } else if (t < 0.6) { 
-            // THE MAIN WINGS
-            // This creates the broad "fanning" effect
-            let wingPower = pow(abs(sin(t * PI * featherFreq)), 18);
-            featherLength = 0.4 * wingPower * sin(t * PI) * scale;
-            angleOffset = map(t, 0.2, 0.6, -PI/4, -PI * 1.2);
-        } else { 
-            // THE TAIL PLUMES
-            // Long, flowing, swirling strands
-            let tailPower = pow(abs(sin(t * PI * 12)), 10);
-            featherLength = 0.5 * tailPower * pow(t, 2) * scale;
-            angleOffset = PI * 0.8 + sin(t * 10);
+            // Uses localized high-power cos to sharpen the beak
+            let beakAngle = map(t, 0, 0.05, -PI/2, 0);
+            x = spineX + 0.05 * cos(beakAngle) + pow(sin(t * 1000), 10) * 0.01;
+            y = spineY + 0.05 * sin(beakAngle);
+            r = 0.4;
+        } 
+        else if (t < 0.5) { 
+            // THE LAYERED WINGS
+            // Harmonic interference creates the "shredded" feather look
+            let wingSide = (index % 2 === 0) ? 1 : -1;
+            let wingProg = map(t, 0.05, 0.5, 0, 1);
+            
+            // Primary and Secondary feather harmonics
+            let freq = 60;
+            let featherLength = 0.8 * sin(PI * wingProg) * pow(abs(sin(t * PI * freq)), 20);
+            let angle = wingSide * (PI * 0.7 * wingProg + 0.5);
+            
+            x = spineX + featherLength * cos(angle);
+            y = spineY + featherLength * sin(angle) - wingProg * 0.2;
+            r = 0.3 + (1 - featherLength) * 0.8;
+        } 
+        else if (t < 0.65) {
+            // THE BODY PLUMAGE
+            // Dense, small circles to create volume
+            x = spineX + 0.1 * sin(t * 500) * pow(sin(t * PI), 10);
+            y = spineY;
+            r = 0.5;
+        }
+        else { 
+            // THE TAIL (The "Realistic" Multi-Strand flow)
+            let tailProg = map(t, 0.65, 1, 0, 1);
+            let strandCount = 7;
+            let strandId = index % strandCount;
+            let strandFreq = 4 + strandId * 0.5;
+            
+            let tailWave = 0.4 * tailProg * sin(tailProg * strandFreq + strandId);
+            let tailWidth = 0.2 * sin(PI * tailProg);
+            
+            x = spineX + tailWave + (strandId - 3) * 0.02;
+            y = spineY + tailProg * 0.5;
+            r = 0.4 * (1 - tailProg);
         }
 
-        // Calculate final coordinates using the spine as the origin for feathers
-        let x = centerX + spineX + featherLength * cos(angleOffset);
-        let y = centerY + spineY + featherLength * sin(angleOffset);
+        // Apply global scale and center
+        let finalX = centerX + x * scale;
+        let finalY = centerY + y * scale;
         
-        // Varying radius to make the "tips" of feathers finer
-        let r = (0.5 + 1.5 * (1 - featherLength / (0.5 * scale)));
+        // Final circle rendering
+        ellipse(finalX, finalY, r * 2.5);
 
-        // Draw the circle
-        ellipse(x, y, r * 2);
-
-        // Add "Spine Detail" (the dense black core line)
-        if (index % 5 == 0) {
-            strokeWeight(0.1);
-            ellipse(centerX + spineX, centerY + spineY, 1, 1);
-            strokeWeight(0.35);
+        // Add "Eye" detail at specific k
+        if (index === 100) {
+            strokeWeight(2);
+            point(finalX, finalY);
+            strokeWeight(0.2);
         }
     }
 
     function windowResized() {
         resizeCanvas(windowWidth, windowHeight);
         background(255);
-        k = 1;
+        k = 0;
     }
 </script>
+
 </body>
 </html>
