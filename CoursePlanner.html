@@ -78,47 +78,86 @@
             align-items: flex-end; 
             margin-bottom: 25px; 
         }
-        .results-left { display: flex; flex-direction: column; justify-content: flex-end;}
+        .results-left { display: flex; flex-direction: column; justification-content: flex-end;}
         .results-meta { font-size: 16px; color: #333; margin: 0; }
 
         /* Custom Sort Dropdown Styling */
-        .sort-wrapper {
+        .sort-custom-container {
             position: relative;
             display: inline-block;
         }
-        .sort-dropdown {
-            appearance: none;
-            -webkit-appearance: none;
-            background: white;
-            border: 1px solid #333;
-            padding: 12px 45px 12px 15px;
-            font-size: 16px;
+
+        .sort-custom-button {
+            display: flex;
+            align-items: stretch;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
             cursor: pointer;
-            outline: none;
-            color: #333;
+            font-weight: 500;
+            font-size: 16px;
             border-radius: 2px;
-            min-width: 170px;
+            background: white;
         }
-        .sort-wrapper::after {
-            content: "⌄";
-            position: absolute;
-            right: 15px;
-            top: 45%;
-            transform: translateY(-50%);
-            pointer-events: none;
-            font-size: 22px;
-            color: #333;
-            font-weight: bold;
+
+        #sortText {
+            padding: 12px 15px;
+            flex-grow: 1;
         }
-        .sort-wrapper::before {
-            content: "";
+
+        .custom-arrow-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            position: relative;
+        }
+
+        .custom-arrow-box::before {
+            content: '';
             position: absolute;
-            right: 42px;
+            left: 0;
             top: 0;
             bottom: 0;
             width: 1px;
-            background-color: #333;
-            pointer-events: none;
+            background-color: var(--primary-blue);
+        }
+
+        #sortArrow {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        #sortArrow::after {
+            content: 'v';
+        }
+
+        .sort-custom-button.open #sortArrow::after {
+            content: '^';
+        }
+
+        .sort-custom-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            left: 0;
+            border: 1px solid var(--primary-blue);
+            border-top: none;
+            background: #fff;
+            z-index: 10;
+            border-radius: 0 0 2px 2px;
+        }
+
+        .sort-option {
+            color: var(--primary-blue);
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 16px;
+        }
+
+        .sort-option:hover {
+            background-color: var(--hover-light-blue);
         }
 
         .result-card {
@@ -243,11 +282,19 @@
                     <div class="results-meta" id="resultsCount">Displaying 0 - 0 of 0 results</div>
                 </div>
                 <div class="results-right">
-                    <div class="sort-wrapper">
-                        <select id="sortSelect" class="sort-dropdown">
-                            <option value="relevance">Sort: Relevance</option>
-                            <option value="trending">Sort: Trending</option>
-                        </select>
+                    <div class="sort-custom-container">
+                        <div class="sort-custom-button" id="customSortBtn">
+                            <span id="sortText">Sort: Relevance</span>
+                            <div class="custom-arrow-box">
+                                <span id="sortArrow"></span>
+                            </div>
+                        </div>
+                        <div class="sort-custom-menu" id="customSortMenu">
+                            <div class="sort-option" data-value="relevance">Relevance</div>
+                            <div class="sort-option" data-value="date">Published date</div>
+                            <div class="sort-option" data-value="az">Title (A-Z)</div>
+                            <div class="sort-option" data-value="za">Title (Z-A)</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -268,16 +315,16 @@ const faqData = [
     { l1: "I’m a new student and need help getting started", l2: "How do I plan my first year and enrol before semester starts?", answer: "Complete the Get Started website steps, then register for an Intro to Course Planning webinar to learn about course rules and timetabling." },
     { l1: "I’m a new student and need help getting started", l2: "What is the Student Learning Entitlement (SLE)?", answer: "A 7-EFTSL limit (approx. 7 years) for Commonwealth Supported Places; once reached, you may need to transfer to a fee-paying place." },
     { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How is my Weighted Average Mark (WAM) calculated and what counts toward it?", answer: "WAM is your average mark weighted by credit points; failed subjects count, but pass/fail or withdrawn subjects do not." },
-    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How do I access ongoing support, including an Academic Adjustment Plan (AAP)?", answer: "Register with Student Equity and Disability Support (SEDS) with valid medical documentation to establish an AAP." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How do I access ongoing support, including an Academic Adjustment Plan (AAP)?", answer: "Register with Student Equity and Disability Support (SEDS) with valid medical documentation to establish an Academic Adjustment Plan (AAP)." },
     { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What support can I get if circumstances affect my assessments?", answer: "You can apply for Special Consideration if unexpected circumstances like illness or hardship impact your ability to complete assessments." },
     { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What should I do if I fail a subject?", answer: "Check how the fail affects your course progression and prerequisites; you may need to repeat the subject or choose an alternative." },
     { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "Why can't I see my final results after the results release date?", answer: "Results may be withheld due to outstanding fees, administrative sanctions, or pending academic integrity investigations." },
     { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What options do I have if I miss, fail, or am worried about an exam?", answer: "Depending on your situation, you may be eligible for Special Consideration, a supplementary exam, or a Final Subject Assessment." },
     { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How do I access a faculty-managed supplementary exam?", answer: "Supplementary exams are typically granted via the Special Consideration process or meeting specific faculty eligibility criteria." },
     { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "Can I apply to extend my Maximum Course Length before a CAPC meeting?", answer: "Yes, you must apply for an extension if your time to complete the degree will exceed the standard allowable duration." },
-    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What is Final Subject Assessment (FSA), and how does it work?", answer: "FSA is a final opportunity to pass a single failed subject required for graduation, provided you meet specific eligibility rules." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What is Final Subject Assessment (FSA), and how does it work?", answer: "A Final Subject Assessment (FSA) is a final opportunity to pass a single failed subject required for graduation, provided you meet specific eligibility rules." },
     { l1: "I’m considering another course or graduate study", l2: "What are the entry requirements for my course, and are there guaranteed entry pathways?", answer: "Requirements vary by course and often include a minimum ATAR/WAM and specific prerequisites; check the Study.unimelb site for details." },
-    { l1: "I’m considering another course or graduate study", l2: "What is Graduate Access Melbourne (GAM), and how do I apply?", answer: "GAM is an equity program for domestic students; apply as part of your graduate application with evidence of personal circumstances." },
+    { l1: "I’m considering another course or graduate study", l2: "What is Graduate Access Melbourne (GAM), and how do I apply?", answer: "Graduate Access Melbourne (GAM) is an equity program for domestic students; apply as part of your graduate application with evidence of personal circumstances." },
     { l1: "I’m considering another course or graduate study", l2: "Who can I speak to about graduate coursework study options?", answer: "Review courses on the Study at Melbourne website or book a Course Planning appointment to discuss how your current study fits future goals." },
     { l1: "I’m considering another course or graduate study", l2: "Do I still need to re‑enrol if I’ve applied to transfer courses?", answer: "Yes, you must re-enrol in your current course while waiting for a transfer outcome to ensure you maintain your student status." },
     { l1: "I’m considering another course or graduate study", l2: "How do I transfer from one University of Melbourne degree to another?", answer: "Apply via the internal Undergraduate Course Transfer form; selection is based on entry requirements, performance, and place availability." },
@@ -286,11 +333,11 @@ const faqData = [
     { l1: "I need help choosing, changing, or planning my subjects", l2: "What happens if I withdraw from a subject?", answer: "Withdrawing has financial and academic consequences depending on the census date; check the Handbook for dates and use the withdrawal tool." },
     { l1: "I need help choosing, changing, or planning my subjects", l2: "Can I get advice on the subjects I’ve chosen this semester?", answer: "Review online planning resources or book a 15-minute course advice appointment to verify if your choices meet degree requirements." },
     { l1: "I need help choosing, changing, or planning my subjects", l2: "How do I take part in Melbourne Plus activities?", answer: "Register for recognized activities through the student portal to develop and receive digital credentials for your co-curricular skills." },
-    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can I get help with my Skills Towards Employment Program (STEP) subject?", answer: "Specific workshops and tutoring are available to help you navigate the requirements and career-readiness aspects of STEP." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can I get help with my Skills Towards Employment Program (STEP) subject?", answer: "Specific workshops and tutoring are available to help you navigate the requirements and career-readiness aspects of Skills Towards Employment Program (STEP)." },
     { l1: "I need help choosing, changing, or planning my subjects", l2: "What internship subjects can I take, and how do I apply?", answer: "Search the University Handbook for faculty-specific internship subjects and follow the application process for vocational placement approval." },
-    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can someone help me understand my subject prerequisites?", answer: "Prerequisites are listed in the Handbook; if you have complex credit or background questions, book a Course Planning appointment." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can someone help me understand my subject prerequisites?", answer: "Prerequisites are listed in the University Handbook; if you have complex credit or background questions, book a Course Planning appointment." },
     { l1: "I need to understand my course structure, majors/minors and study load", l2: "What are my part-time study options, and will it affect my course plan?", answer: "Domestic students can usually reduce their load to 1-2 subjects; check how this affects your expected completion date and any benefits." },
-    { l1: "I need to understand my course structure, majors/minors and study load", l2: "What do I need to know about changing my study load (reducing or overloading)?", answer: "Overloading requires a high WAM and approval; reducing load may extend your course duration or impact visa requirements for international students." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "What do I need to know about changing my study load (reducing or overloading)?", answer: "Overloading requires a high Weighted Average Mark (WAM) and approval; reducing load may extend your course duration or impact visa requirements for international students." },
     { l1: "I need to understand my course structure, majors/minors and study load", l2: "Am I eligible for an early exit award?", answer: "Some courses allow you to exit early with a lower qualification (e.g., Graduate Diploma instead of Masters) if requirements are met." },
     { l1: "I need to understand my course structure, majors/minors and study load", l2: "Can someone help me understand my course structure and course rules?", answer: "Use My Course Planner to map requirements or attend a Course Planning session for a breakdown of your degree structure and rules." },
     { l1: "I need to understand my course structure, majors/minors and study load", l2: "What do I need to know before taking a Leave of Absence?", answer: "Check the impact on your Maximum Course Length and make sure you apply before the census date to avoid financial penalties." },
@@ -480,6 +527,35 @@ window.nextPage = () => {
 document.getElementById("searchInput").oninput = (e) => { searchQuery = e.target.value; currentPage = 1; updateUI(); };
 
 updateUI();
+
+// Custom Sort Dropdown Interaction
+const sortBtn = document.getElementById('customSortBtn');
+const sortMenu = document.getElementById('customSortMenu');
+const sortText = document.getElementById('sortText');
+const sortOptions = document.querySelectorAll('.sort-option');
+
+sortBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent immediate closing
+    sortMenu.style.display = sortMenu.style.display === 'block' ? 'none' : 'block';
+    sortBtn.classList.toggle('open');
+});
+
+sortOptions.forEach(option => {
+    option.addEventListener('click', (e) => {
+        const textValue = option.innerText;
+        sortText.innerText = `Sort: ${textValue}`;
+        sortMenu.style.display = 'none';
+        sortBtn.classList.remove('open');
+    });
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    if (!sortBtn.contains(e.target) && !sortMenu.contains(e.target)) {
+        sortMenu.style.display = 'none';
+        sortBtn.classList.remove('open');
+    }
+});
   </script>
 </body>
 </html>
