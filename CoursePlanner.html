@@ -33,20 +33,7 @@
         .label { min-width: 100px; font-size: 18px; padding-top: 12px; }
 
         .search-group { display: flex; flex-grow: 1; border-radius: 4px; overflow: hidden; }
-        .search-group input { flex-grow: 1; padding: 16px 20px; font-size: 18px; border: none; outline: none; }
-        
-        .search-group button { 
-            background-color: var(--active-tab-blue); 
-            color: white; 
-            border: none; 
-            padding: 0 45px; 
-            font-size: 18px; 
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        .search-group button:hover {
-            background-color: #4a78c4;
-        }
+        .search-group input { flex-grow: 1; padding: 16px 20px; font-size: 18px; border: none; outline: none; border-radius: 4px; }
 
         .tabs-wrapper { display: flex; flex-wrap: wrap; gap: 12px; flex-grow: 1; }
         .tab {
@@ -84,24 +71,29 @@
         }
 
         .results-section { padding: 40px 20px; min-height: 500px;}
-        .results-meta { font-size: 15px; color: #666; margin-bottom: 25px; }
+        
+        .results-top-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end; 
+            margin-bottom: 25px; 
+        }
+        .results-left { display: flex; flex-direction: column; gap: 15px; }
+        .results-meta { font-size: 15px; color: #666; margin: 0; }
 
-        .pagination { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
-        .page-nav-btn {
-            background: white;
+        .pagination { display: flex; align-items: center; gap: 10px; margin: 0; }
+        
+        .dropdown-select {
             border: 1px solid var(--primary-blue);
             color: var(--primary-blue);
-            padding: 8px 16px;
+            padding: 8px 12px;
             border-radius: 4px;
-            cursor: pointer;
             font-weight: bold;
-            font-size: 18px;
-            transition: all 0.2s ease;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+            outline: none;
         }
-        .page-nav-btn:hover:not(:disabled) {
-            background-color: var(--hover-light-blue);
-        }
-        .page-nav-btn:disabled { opacity: 0.3; cursor: default; }
 
         .result-card {
             border: 1px solid var(--border-grey);
@@ -111,7 +103,6 @@
             border-radius: 2px;
             background: #fff;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            /* Added Grab Hand Cursor */
             cursor: grab;
         }
         .result-card:hover {
@@ -127,7 +118,6 @@
             display: block; 
             text-decoration: none;
             transition: color 0.2s ease;
-            /* Added Grab Hand Cursor */
             cursor: grab;
         }
         .result-card:hover .result-title {
@@ -137,6 +127,26 @@
         }
 
         .result-ans { color: #4B5563; font-size: 16px; line-height: 1.6; }
+
+        .chatbot-popup {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.2s ease;
+        }
+        .chatbot-popup:hover { 
+            transform: translateY(-3px); 
+        }
+
     </style>
 </head>
 <body>
@@ -144,11 +154,9 @@
     <div class="header-container">
         <div class="container">
             <h1>The University of Melbourne’s official source of course planning information</h1>
-            <div class="row">
-                <div class="label">Search for</div>
+            <div class="row" style="margin-bottom: 20px;">
                 <div class="search-group">
-                    <input type="text" id="searchInput" placeholder="keywords">
-                    <button id="searchBtn">Search</button>
+                    <input type="text" id="searchInput" placeholder="Search keywords...">
                 </div>
             </div>
             <div class="row">
@@ -160,20 +168,30 @@
 
     <div class="results-section">
         <div class="container">
-            <div class="results-meta" id="resultsCount">0 results found</div>
-            
-            <div class="pagination" id="paginationControls">
-                <button id="prevPage" class="page-nav-btn">&lt;</button>
-                <span>Page</span>
-                <div style="border: 1px solid var(--primary-blue); padding: 6px 14px; border-radius: 4px; font-weight: bold; color: var(--primary-blue);">
-                    <span id="currPage">1</span> &nbsp; ▾
+            <div class="results-top-bar">
+                <div class="results-left">
+                    <div class="results-meta" id="resultsCount">0 results found</div>
+                    <div class="pagination" id="paginationControls">
+                        <span>Page</span>
+                        <select id="pageSelect" class="dropdown-select"></select>
+                        <span>of <span id="totalP">1</span></span>
+                    </div>
                 </div>
-                <span>of <span id="totalP">1</span></span>
-                <button id="nextPage" class="page-nav-btn">&gt;</button>
+                <div class="results-right">
+                    <label for="sortSelect" style="margin-right: 10px; color: #666; font-size: 15px;">Sort by:</label>
+                    <select id="sortSelect" class="dropdown-select">
+                        <option value="relevance">Relevance</option>
+                        <option value="trending">Trending</option>
+                    </select>
+                </div>
             </div>
 
             <div id="resultsContainer"></div>
         </div>
+    </div>
+
+    <div class="chatbot-popup">
+        Need more help?
     </div>
 
   <script>
@@ -234,7 +252,7 @@ const faqData = [
     { l1: "I want to study overseas as part of my course", l2: "Can I study overseas as part of my course?", answer: "Yes, through semester-long exchange, short-term programs, or independent study abroad; see Global Learning for all available pathways." },
     { l1: "I want to study overseas as part of my course", l2: "Will studying on exchange affect my WAM?", answer: "Exchange subjects are typically recorded as 'Pass' or 'Fail' on your Melbourne transcript and do not contribute to your WAM calculation." },
     { l1: "I want to study overseas as part of my course", l2: "How do I know which exchange subjects will count for credit?", answer: "You must submit a proposed study plan for faculty approval before you depart to ensure your overseas credits will be recognized." }
-].map((item, index) => ({ ...item, id: index + 1 })); // Map ID for link ordering
+].map((item, index) => ({ ...item, id: index + 1 }));
 
 const stopWords = new Set(["how", "do", "i", "for", "an", "the", "a", "is", "can", "to", "what", "should", "my", "me", "with", "about", "where", "does", "of", "in", "and", "on", "at", "by", "from", "be", "been", "was", "were", "has", "have", "had", "it", "its", "they", "them", "their", "there", "this", "that", "these", "those", "which", "who", "whom", "why", "if", "or"]);
 
@@ -256,10 +274,9 @@ const synonymMap = {
 };
 
 const categories = {
-    "All results": [],
     "New Student": ["I’m a new student and need help getting started"],
     "Subjects & Courses": [
-        "I'm considering another course or graduate study",
+        "I’m considering another course or graduate study",
         "I need help choosing, changing, or planning my subjects",
         "I need help enrolling and managing my study plan for my course or concurrent diploma",
         "I need to understand my course structure, majors/minors and study load"
@@ -269,7 +286,7 @@ const categories = {
     "Exchange": ["I want to study overseas as part of my course"]
 };
 
-let currentTab = "All results";
+let activeTabs = [];
 let searchQuery = "";
 let currentPage = 1;
 const resultsPerPage = 12;
@@ -303,9 +320,14 @@ function updateUI() {
     });
 
     let filtered = scoredResults.filter(item => item.score >= 20);
-    if (currentTab !== "All results") {
-        filtered = filtered.filter(item => categories[currentTab].includes(item.l1));
+    
+    // Multi-select tab filtering
+    if (activeTabs.length > 0) {
+        let allowedL1s = [];
+        activeTabs.forEach(tab => allowedL1s.push(...categories[tab]));
+        filtered = filtered.filter(item => allowedL1s.includes(item.l1));
     }
+    
     filtered.sort((a, b) => b.score - a.score);
 
     const totalResults = filtered.length;
@@ -314,12 +336,15 @@ function updateUI() {
 
     document.getElementById("resultsCount").innerText = `${totalResults} results found`;
     document.getElementById("totalP").innerText = totalPages;
-    document.getElementById("currPage").innerText = currentPage;
     
     const paginationControls = document.getElementById("paginationControls");
     paginationControls.style.display = totalResults > 0 ? "flex" : "none";
-    document.getElementById("prevPage").disabled = (currentPage === 1);
-    document.getElementById("nextPage").disabled = (currentPage === totalPages);
+    
+    // Populate the dropdown page selector
+    const pageSelect = document.getElementById("pageSelect");
+    pageSelect.innerHTML = Array.from({length: totalPages}, (_, i) => 
+        `<option value="${i + 1}" ${currentPage === i + 1 ? 'selected' : ''}>${i + 1}</option>`
+    ).join('');
 
     const container = document.getElementById("resultsContainer");
     if (totalResults === 0) {
@@ -340,22 +365,33 @@ function updateUI() {
 function renderTabs() {
     const container = document.getElementById("tabsContainer");
     container.innerHTML = Object.keys(categories).map(name => {
-        let count = (name === "All results") ? faqData.length : faqData.filter(i => categories[name].includes(i.l1)).length;
-        return `<div class="tab ${name === currentTab ? 'active' : ''}" onclick="setTab('${name}')">
-            ${name} <span class="tab-badge">${count}</span>
+        let count = faqData.filter(i => categories[name].includes(i.l1)).length;
+        const isActive = activeTabs.includes(name);
+        return `<div class="tab ${isActive ? 'active' : ''}" onclick="toggleTab('${name}')">
+            ${name} <span class="tab-badge" style="color: ${isActive ? 'var(--primary-blue)' : 'var(--primary-blue)'}">${count}</span>
         </div>`;
     }).join('');
 }
 
-window.setTab = (t) => { currentTab = t; currentPage = 1; updateUI(); };
+window.toggleTab = (t) => {
+    if (activeTabs.includes(t)) {
+        activeTabs = activeTabs.filter(tab => tab !== t); // Deselect
+    } else {
+        activeTabs.push(t); // Select
+    }
+    currentPage = 1;
+    updateUI();
+};
+
 document.getElementById("searchInput").oninput = (e) => { searchQuery = e.target.value; currentPage = 1; updateUI(); };
-document.getElementById("prevPage").onclick = () => { if (currentPage > 1) { currentPage--; updateUI(); window.scrollTo(0, 300); } };
-document.getElementById("nextPage").onclick = () => { 
-    const totalResults = parseInt(document.getElementById("resultsCount").innerText);
-    if (currentPage < Math.ceil(totalResults / resultsPerPage)) { currentPage++; updateUI(); window.scrollTo(0, 300); } 
+
+document.getElementById("pageSelect").onchange = (e) => {
+    currentPage = parseInt(e.target.value);
+    updateUI();
+    window.scrollTo(0, 300);
 };
 
 updateUI();
-    </script>
+  </script>
 </body>
 </html>
