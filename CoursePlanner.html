@@ -435,12 +435,17 @@ function updateUI() {
         return { ...item, score };
     });
 
-    let filtered = scoredResults.filter(item => item.score >= 20);
+    let filtered = [...scoredResults]; // Always show all results
     
+    // Boost score for selected tabs to sort them to the top
     if (activeTabs.length > 0) {
         let allowedL1s = [];
         activeTabs.forEach(tab => allowedL1s.push(...categories[tab]));
-        filtered = filtered.filter(item => allowedL1s.includes(item.l1));
+        filtered.forEach(item => {
+            if (allowedL1s.includes(item.l1)) {
+                item.score += 10000;
+            }
+        });
     }
     
     filtered.sort((a, b) => b.score - a.score);
