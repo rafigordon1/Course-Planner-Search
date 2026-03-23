@@ -122,17 +122,19 @@
             background-color: var(--primary-blue);
         }
 
+        /* Fine line chevron using CSS borders */
         #sortArrow {
-            font-size: 20px;
-            font-weight: bold;
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-right: 1.5px solid var(--primary-blue);
+            border-bottom: 1.5px solid var(--primary-blue);
+            transform: translateY(-2px) rotate(45deg);
+            transition: transform 0.2s ease;
         }
 
-        #sortArrow::after {
-            content: 'v';
-        }
-
-        .sort-custom-button.open #sortArrow::after {
-            content: '^';
+        .sort-custom-button.open #sortArrow {
+            transform: translateY(2px) rotate(225deg);
         }
 
         .sort-custom-menu {
@@ -291,9 +293,7 @@
                         </div>
                         <div class="sort-custom-menu" id="customSortMenu">
                             <div class="sort-option" data-value="relevance">Relevance</div>
-                            <div class="sort-option" data-value="date">Published date</div>
-                            <div class="sort-option" data-value="az">Title (A-Z)</div>
-                            <div class="sort-option" data-value="za">Title (Z-A)</div>
+                            <div class="sort-option" data-value="trending">Trending</div>
                         </div>
                     </div>
                 </div>
