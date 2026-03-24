@@ -18,20 +18,18 @@
         * { box-sizing: border-box; font-family: sans-serif; }
         body { margin: 0; background-color: white; color: #333; }
 
-        /* Top Breadcrumb Header */
+        /* Top Breadcrumb Header (Aligned to the left side of the page) */
         .top-breadcrumb {
             background-color: var(--dark-blue);
             padding: 12px 20px;
             color: white;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 500;
         }
         .breadcrumb-container {
             display: flex;
             align-items: center;
             gap: 12px;
-            max-width: 1000px;
-            margin: 0 auto;
         }
         .breadcrumb-container a {
             color: white;
@@ -158,7 +156,6 @@
             background-color: var(--primary-blue);
         }
 
-        /* Fine line chevron using CSS borders */
         #sortArrow {
             display: inline-block;
             width: 8px;
@@ -205,10 +202,7 @@
             margin-bottom: 20px;
             border-radius: 2px;
             background: #fff;
-            transition: box-shadow 0.2s ease, background-color 0.2s ease;
-        }
-        .accordion-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: background-color 0.2s ease;
         }
         .accordion-item.highlight-bg {
             background-color: var(--hover-light-blue);
@@ -232,7 +226,9 @@
             transition: color 0.2s ease;
             line-height: 1.3;
             padding-right: 20px;
+            display: inline-block;
         }
+        /* Hover effect strictly on the text only */
         .accordion-title:hover {
             color: var(--active-tab-blue);
             text-decoration: underline;
@@ -333,6 +329,7 @@
             display: none;
             flex-direction: column;
             overflow: hidden;
+            border: 1px solid var(--border-grey);
         }
         .chatbot-header {
             background: var(--primary-blue);
@@ -361,24 +358,23 @@
             background: #f9f9f9;
         }
         .chat-msg {
-            padding: 10px 14px;
+            padding: 12px 16px;
             border-radius: 6px;
             font-size: 14px;
-            line-height: 1.4;
+            line-height: 1.5;
             max-width: 85%;
         }
         .bot-msg {
             background: white;
             border: 1px solid var(--border-grey);
             align-self: flex-start;
-            border-bottom-left-radius: 2px;
             color: #333;
         }
         .user-msg {
             background: var(--hover-light-blue);
             color: var(--primary-blue);
             align-self: flex-end;
-            border-bottom-right-radius: 2px;
+            border: 1px solid var(--active-tab-blue);
         }
         .chatbot-input-area {
             display: flex;
@@ -414,7 +410,7 @@
 <body>
 
     <div class="top-breadcrumb">
-        <div class="container breadcrumb-container">
+        <div class="breadcrumb-container">
             <svg class="home-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
             </svg>
@@ -549,6 +545,17 @@ const faqData = [
     { l1: "I want to study overseas as part of my course", l2: "How do I know which exchange subjects will count for credit?", answer: "You must submit a proposed study plan for faculty approval before you depart to ensure your overseas credits will be recognized." }
 ].map((item, index) => ({ ...item, id: index + 1 }));
 
+// Generate full content to power chatbot and deep-search accuracy
+faqData.forEach(item => {
+    item.content = `${item.l2} ${item.answer} Detailed information regarding this can be found in the University Handbook and by consulting the Course Planning team. Make sure to consider all prerequisites, deadlines, and your study load to ensure successful progression through your degree.`;
+});
+
+// Hardcode specifics directly extracted from the provided PDF reference file 
+faqData[0].content = "Getting your student visa in time to start your course if you plan to study on a student visa, you must be in Australia to start your course. Student visa holders can't study fully online due to online study limitations. When you need to arrive: If you're a commencing student, aim to arrive by orientation week or your earliest subject start date. Start dates are listed in the University Handbook. Most courses don't allow students to start after the end of Week 2 of semester. If your visa is delayed: If you can't arrive by the end of Week 2 due to visa delays, you're strongly advised to apply to defer your offer to a later intake, if your course allows. Important to know: you may be recorded as a non-commencing student if you don't arrive on time. Your Confirmation of Enrolment (CoE) may be ended. This can affect your current or future visa.";
+faqData[1].content = "Planning your first year and enrolling before semester starts To get ready for your first year, start by completing all required steps on the Get Started website. Once you've done this, register for an Intro to Course Planning webinar. These online sessions are run by experienced course advisers and include time for questions. The webinar will help you: plan and enrol in your first-year subjects, understand your course rules and enrolment requirements, learn how to create your timetable, and make sure everything is ready before semester starts.";
+faqData[2].content = "Student Learning Entitlement (SLE) The Student Learning Entitlement (SLE) sets a limit on how much study you can complete in a Commonwealth Supported Place (CSP). Who it applies to: The SLE applies to all CSP students enrolled in subjects with a census date on or after 1 January 2022. How the SLE works: The SLE limit is 7 EFTSL, which is equal to 700 credit points or seven years of full-time study at the University of Melbourne. It is not time-based. Instead, each subject you complete reduces your remaining SLE. For example, a 12.5 credit point subject uses 0.125 EFTSL.";
+faqData[3].content = "Understanding your WAM (Weighted Average Mark) Your WAM shows your overall academic performance. it's calculated using your numeric marks and the credit points for each subject. How your WAM is calculated: WAM is a weighted average, so subjects with more credit points count more. WAM = sum of (mark credit points) / total credit points. For example, a 25-point subject counts twice as much as a 12.5-point subject. Your WAM updates as results are finalised in my.unimelb and is calculated to three decimal places. Failed subjects: the mark is included. Continuing subjects: don't count while marked CNT, once completed, the final mark counts across all parts. Subjects are not included if they have no numeric mark, are pass/fail only, have a withdrawn status, or were granted advanced standing (credit) from another institution.";
+
 const stopWords = new Set(["how", "do", "i", "for", "an", "the", "a", "is", "can", "to", "what", "should", "my", "me", "with", "about", "where", "does", "of", "in", "and", "on", "at", "by", "from", "be", "been", "was", "were", "has", "have", "had", "it", "its", "they", "them", "their", "there", "this", "that", "these", "those", "which", "who", "whom", "why", "if", "or"]);
 
 const synonymMap = {
@@ -596,7 +603,8 @@ function updateUI() {
     let scoredResults = faqData.map(item => {
         let score = 0;
         const title = item.l2.toLowerCase();
-        const content = item.answer.toLowerCase();
+        const answerText = item.answer.toLowerCase();
+        const fullContent = (item.content || "").toLowerCase();
 
         if (rawInput.length > 0) {
             if (title.includes(rawInput)) score += 150;
@@ -609,7 +617,8 @@ function updateUI() {
                 if (!regex.test(title)) {
                     Object.keys(synonymMap).forEach(key => { if (token.length > 2 && key.includes(token)) score += 20; });
                 }
-                if (regex.test(content)) score += 30;
+                if (regex.test(answerText)) score += 30;
+                if (regex.test(fullContent)) score += 20; // Expanded to check the comprehensive display information
             });
         } else { score = 100; }
         return { ...item, score };
@@ -654,8 +663,7 @@ function updateUI() {
                         <span class="accordion-icon"></span>
                     </button>
                     <div class="accordion-content">
-                        ${item.answer}
-                    </div>
+                        ${item.answer} </div>
                 </div>
             `;
         }).join('');
@@ -788,7 +796,7 @@ function sendChatMessage() {
     addChatMessage(userText, 'user');
     inputField.value = '';
 
-    // Simple search algorithm to find an answer
+    // Advanced search logic scanning full detailed content 
     const rawInput = userText.toLowerCase();
     const cleanInput = rawInput.replace(/[^\w\s]/gi, '');
     const tokens = cleanInput.split(/\s+/).filter(t => t.length > 0 && !stopWords.has(t));
@@ -799,7 +807,8 @@ function sendChatMessage() {
     faqData.forEach(item => {
         let score = 0;
         const title = item.l2.toLowerCase();
-        const content = item.answer.toLowerCase();
+        const answerText = item.answer.toLowerCase();
+        const fullContent = (item.content || "").toLowerCase();
 
         if (title.includes(rawInput)) score += 150;
         tokens.forEach(token => {
@@ -811,7 +820,8 @@ function sendChatMessage() {
             if (!regex.test(title)) {
                 Object.keys(synonymMap).forEach(key => { if (token.length > 2 && key.includes(token)) score += 20; });
             }
-            if (regex.test(content)) score += 30;
+            if (regex.test(answerText)) score += 30;
+            if (regex.test(fullContent)) score += 30; 
         });
 
         if (score > bestScore) {
@@ -820,9 +830,10 @@ function sendChatMessage() {
         }
     });
 
-    // Simulate response delay
+    // Simulate conversational response delay
     setTimeout(() => {
         if (bestScore >= 40 && bestMatch) {
+            // Chatbot delivers the 1-sentence helpful summary based on the search of the larger corpus
             addChatMessage(bestMatch.answer, 'bot');
         } else {
             addChatMessage("Would you like to meet with someone?", 'bot');
