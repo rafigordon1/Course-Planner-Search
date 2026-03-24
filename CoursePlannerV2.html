@@ -18,7 +18,7 @@
         * { box-sizing: border-box; font-family: sans-serif; }
         body { margin: 0; background-color: white; color: #333; }
 
-        /* Top Breadcrumb Header (Aligned to the left side of the page) */
+        /* Top Breadcrumb Header */
         .top-breadcrumb {
             background-color: var(--dark-blue);
             padding: 12px 20px;
@@ -115,12 +115,11 @@
         .results-left { display: flex; flex-direction: column; justify-content: flex-end;}
         .results-meta { font-size: 16px; color: #333; margin: 0; }
 
-        /* Custom Sort Dropdown Styling */
+        /* Custom Sort Dropdown */
         .sort-custom-container {
             position: relative;
             display: inline-block;
         }
-
         .sort-custom-button {
             display: flex;
             align-items: stretch;
@@ -132,12 +131,10 @@
             border-radius: 2px;
             background: white;
         }
-
         #sortText {
             padding: 12px 15px;
             flex-grow: 1;
         }
-
         .custom-arrow-box {
             display: flex;
             align-items: center;
@@ -145,7 +142,6 @@
             width: 40px;
             position: relative;
         }
-
         .custom-arrow-box::before {
             content: '';
             position: absolute;
@@ -155,7 +151,6 @@
             width: 1px;
             background-color: var(--primary-blue);
         }
-
         #sortArrow {
             display: inline-block;
             width: 8px;
@@ -165,11 +160,9 @@
             transform: translateY(-2px) rotate(45deg);
             transition: transform 0.2s ease;
         }
-
         .sort-custom-button.open #sortArrow {
             transform: translateY(2px) rotate(225deg);
         }
-
         .sort-custom-menu {
             display: none;
             position: absolute;
@@ -182,7 +175,6 @@
             z-index: 10;
             border-radius: 0 0 2px 2px;
         }
-
         .sort-option {
             color: var(--primary-blue);
             padding: 12px 15px;
@@ -190,7 +182,6 @@
             transition: background-color 0.2s ease;
             font-size: 16px;
         }
-
         .sort-option:hover {
             background-color: var(--hover-light-blue);
         }
@@ -228,7 +219,6 @@
             padding-right: 20px;
             display: inline-block;
         }
-        /* Hover effect strictly on the text only */
         .accordion-title:hover {
             color: var(--active-tab-blue);
             text-decoration: underline;
@@ -487,62 +477,62 @@
 
   <script>
 const rawFaqData = [
-    { l1: "I’m a new student and need help getting started", l2: "What should I do if my student visa isn’t granted in time to start my course?", answer: "If you can’t arrive by the end of Week 2 due to visa delays, you are strongly advised to apply to defer your offer to a later intake." },
-    { l1: "I’m a new student and need help getting started", l2: "How do I plan my first year and enrol before semester starts?", answer: "Complete the Get Started website steps, then register for an Intro to Course Planning webinar to learn about course rules and timetabling." },
-    { l1: "I’m a new student and need help getting started", l2: "What is the Student Learning Entitlement (SLE)?", answer: "A 7-EFTSL limit (approx. 7 years) for Commonwealth Supported Places; once reached, you may need to transfer to a fee-paying place." },
-    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How is my Weighted Average Mark (WAM) calculated and what counts toward it?", answer: "WAM is your average mark weighted by credit points; failed subjects count, but pass/fail or withdrawn subjects do not." },
-    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How do I access ongoing support, including an Academic Adjustment Plan (AAP)?", answer: "Register with Student Equity and Disability Support (SEDS) with valid medical documentation to establish an Academic Adjustment Plan (AAP)." },
-    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What support can I get if circumstances affect my assessments?", answer: "You can apply for Special Consideration if unexpected circumstances like illness or hardship impact your ability to complete assessments." },
-    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What should I do if I fail a subject?", answer: "Check how the fail affects your course progression and prerequisites; you may need to repeat the subject or choose an alternative." },
-    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "Why can't I see my final results after the results release date?", answer: "Results may be withheld due to outstanding fees, administrative sanctions, or pending academic integrity investigations." },
-    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What options do I have if I miss, fail, or am worried about an exam?", answer: "Depending on your situation, you may be eligible for Special Consideration, a supplementary exam, or a Final Subject Assessment." },
-    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How do I access a faculty-managed supplementary exam?", answer: "Supplementary exams are typically granted via the Special Consideration process or meeting specific faculty eligibility criteria." },
-    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "Can I apply to extend my Maximum Course Length before a CAPC meeting?", answer: "Yes, you must apply for an extension if your time to complete the degree will exceed the standard allowable duration." },
-    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What is Final Subject Assessment (FSA), and how does it work?", answer: "A Final Subject Assessment (FSA) is a final opportunity to pass a single failed subject required for graduation, provided you meet specific eligibility rules." },
-    { l1: "I’m considering another course or graduate study", l2: "What are the entry requirements for my course, and are there guaranteed entry pathways?", answer: "Requirements vary by course and often include a minimum ATAR/WAM and specific prerequisites; check the Study.unimelb site for details." },
-    { l1: "I’m considering another course or graduate study", l2: "What is Graduate Access Melbourne (GAM), and how do I apply?", answer: "Graduate Access Melbourne (GAM) is an equity program for domestic students; apply as part of your graduate application with evidence of personal circumstances." },
-    { l1: "I’m considering another course or graduate study", l2: "Who can I speak to about graduate coursework study options?", answer: "Review courses on the Study at Melbourne website or book a Course Planning appointment to discuss how your current study fits future goals." },
-    { l1: "I’m considering another course or graduate study", l2: "Do I still need to re‑enrol if I’ve applied to transfer courses?", answer: "Yes, you must re-enrol in your current course while waiting for a transfer outcome to ensure you maintain your student status." },
-    { l1: "I’m considering another course or graduate study", l2: "How do I transfer from one University of Melbourne degree to another?", answer: "Apply via the internal Undergraduate Course Transfer form; selection is based on entry requirements, performance, and place availability." },
-    { l1: "I’m considering another course or graduate study", l2: "What should I do about my summer subject if I’m transferring courses?", answer: "Either finish the subject in your old course and apply for credit, or request a transfer to the new course via an Enrolment Assistance Form." },
-    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can someone review my course plan in My Course Planner?", answer: "Book an appointment with Course Planning and share your unique My Course Planner URL for a personalized review of your subjects." },
-    { l1: "I need help choosing, changing, or planning my subjects", l2: "What happens if I withdraw from a subject?", answer: "Withdrawing has financial and academic consequences depending on the census date; check the Handbook for dates and use the withdrawal tool." },
-    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can I get advice on the subjects I’ve chosen this semester?", answer: "Review online planning resources or book a 15-minute course advice appointment to verify if your choices meet degree requirements." },
-    { l1: "I need help choosing, changing, or planning my subjects", l2: "How do I take part in Melbourne Plus activities?", answer: "Register for recognized activities through the student portal to develop and receive digital credentials for your co-curricular skills." },
-    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can I get help with my Skills Towards Employment Program (STEP) subject?", answer: "Specific workshops and tutoring are available to help you navigate the requirements and career-readiness aspects of Skills Towards Employment Program (STEP)." },
-    { l1: "I need help choosing, changing, or planning my subjects", l2: "What internship subjects can I take, and how do I apply?", answer: "Search the University Handbook for faculty-specific internship subjects and follow the application process for vocational placement approval." },
-    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can someone help me understand my subject prerequisites?", answer: "Prerequisites are listed in the University Handbook; if you have complex credit or background questions, book a Course Planning appointment." },
-    { l1: "I need to understand my course structure, majors/minors and study load", l2: "What are my part-time study options, and will it affect my course plan?", answer: "Domestic students can usually reduce their load to 1-2 subjects; check how this affects your expected completion date and any benefits." },
-    { l1: "I need to understand my course structure, majors/minors and study load", l2: "What do I need to know about changing my study load (reducing or overloading)?", answer: "Overloading requires a high Weighted Average Mark (WAM) and approval; reducing load may extend your course duration or impact visa requirements for international students." },
-    { l1: "I need to understand my course structure, majors/minors and study load", l2: "Am I eligible for an early exit award?", answer: "Some courses allow you to exit early with a lower qualification (e.g., Graduate Diploma instead of Masters) if requirements are met." },
-    { l1: "I need to understand my course structure, majors/minors and study load", l2: "Can someone help me understand my course structure and course rules?", answer: "Use My Course Planner to map requirements or attend a Course Planning session for a breakdown of your degree structure and rules." },
-    { l1: "I need to understand my course structure, majors/minors and study load", l2: "What do I need to know before taking a Leave of Absence?", answer: "Check the impact on your Maximum Course Length and make sure you apply before the census date to avoid financial penalties." },
-    { l1: "I need to understand my course structure, majors/minors and study load", l2: "Am I on track to complete my degree?", answer: "Check your 'Course Progression' in my.unimelb to see completed vs. remaining credit points and verify you meet all rule requirements." },
-    { l1: "I need to understand my course structure, majors/minors and study load", l2: "How do I plan or change my major, minor, or specialisation?", answer: "Update your preferences via the 'Study Plan' tab in my.unimelb; seek course advice if you need help fitting a new major into your timeline." },
-    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "How do I withdraw from my course?", answer: "Withdraw from subjects before census dates first; then submit a course withdrawal request and await formal acknowledgement." },
-    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Am I eligible for a concurrent diploma, and how do I add one to my course?", answer: "Apply for a concurrent diploma via the 'Internal Course Application' in my.unimelb, ensuring you have space left in your undergraduate degree." },
-    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I apply for Honours before finishing my concurrent diploma?", answer: "Yes, you can apply for Honours, but you must manage your study plan to ensure both qualifications are completed appropriately." },
-    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I defer my course, and where can I get advice before deciding?", answer: "New students can defer via the Get Started portal; contact a course adviser to discuss how deferral might impact your future study plans." },
-    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Why can't I enrol in a subject?", answer: "Enrolment blocks are usually due to missing prerequisites, timetable clashes, subject quotas being full, or administrative holds." },
-    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "How do I make changes to my Study Plan or subjects?", answer: "Log into my.unimelb, go to the 'Enrolment' tab, and use the 'Enrol in Subjects' tool to add or swap subjects within your course rules." },
-    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Why can't I enrol in a quota subject?", answer: "Quota subjects have limited capacity and specific application deadlines; if full, you may need to wait for a future intake or choose a different subject." },
-    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What should I do if I've been removed from my course for non-enrolment?", answer: "Apply for reinstatement immediately via the Enrolment and Academic Records form; late fees and academic conditions may apply." },
-    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What do I need to do to re-enrol, and what if I miss the deadline?", answer: "Re-enrol via my.unimelb during the designated period; missing the deadline may result in a loss of your place or require a reinstatement application." },
-    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What is a concurrent diploma, and how does it work?", answer: "A separate diploma (e.g., Languages, Maths) taken alongside your Bachelor degree, adding 100 points of additional study." },
-    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I change how a subject counts across my Bachelor and concurrent diploma?", answer: "Request a 'Cross-Credit' update via a webform to move a subject between your primary degree and your diploma study plans." },
-    { l1: "I have questions about credit from my previous study", l2: "Can I change my entry point in a graduate course?", answer: "Entry points depend on the amount of relevant prior study you've completed; submit a credit application for assessment by the faculty." },
-    { l1: "I have questions about credit from my previous study", l2: "How do I plan my course if I have advanced standing (credit)?", answer: "Use My Course Planner to skip credited subjects and map out your remaining requirements based on your credit outcome letter." },
-    { l1: "I have questions about credit from my previous study", l2: "Am I eligible for advanced standing (credit) in my course?", answer: "Submit an application with official transcripts and subject outlines from your previous institution for formal assessment." },
-    { l1: "I have questions about credit from my previous study", l2: "Can I re-apply for advanced standing (credit) that I previously removed?", answer: "Yes, you can re-apply for credit that was previously declined or removed, provided the study remains relevant to your current course." },
-    { l1: "I have questions about credit from my previous study", l2: "Can I enrol in subjects while my credit application is being assessed?", answer: "Yes, but do not enrol in the specific subjects you are seeking credit for, as this may complicate your study plan once credit is granted." },
-    { l1: "I have questions about credit from my previous study", l2: "Can I get an exemption for my Discovery subject?", answer: "Discovery subjects are core to the Melbourne model; exemptions are rare and usually require evidence of equivalent broad-based study." },
-    { l1: "I have questions about credit from my previous study", l2: "Can I remove advanced standing (credit) that's already been applied?", answer: "Yes, you can request to have credit removed if you prefer to complete the equivalent subject at the University of Melbourne instead." },
-    { l1: "I want to study overseas as part of my course", l2: "What do I need to know about going on exchange?", answer: "Check eligibility requirements (like WAM), application deadlines, and partner university options on the Global Learning website." },
-    { l1: "I want to study overseas as part of my course", l2: "Do course progression rules still apply while I'm on exchange?", answer: "Yes, your overseas subjects must be pre-approved to ensure they count toward your degree and meet all progression requirements." },
-    { l1: "I want to study overseas as part of my course", l2: "What do I need to know about going on exchange in my final semester?", answer: "Final semester exchange can delay your graduation if overseas results are not received in time for the University's completion deadlines." },
-    { l1: "I want to study overseas as part of my course", l2: "Can I study overseas as part of my course?", answer: "Yes, through semester-long exchange, short-term programs, or independent study abroad; see Global Learning for all available pathways." },
-    { l1: "I want to study overseas as part of my course", l2: "Will studying on exchange affect my WAM?", answer: "Exchange subjects are typically recorded as 'Pass' or 'Fail' on your Melbourne transcript and do not contribute to your WAM calculation." },
-    { l1: "I want to study overseas as part of my course", l2: "How do I know which exchange subjects will count for credit?", answer: "You must submit a proposed study plan for faculty approval before you depart to ensure your overseas credits will be recognized." }
+    { l1: "I’m a new student and need help getting started", l2: "What should I do if my student visa isn’t granted in time to start my course?", answer: "If you cannot arrive by the end of Week 2 due to visa delays, defer your offer to a later intake immediately." },
+    { l1: "I’m a new student and need help getting started", l2: "How do I plan my first year and enrol before semester starts?", answer: "Complete the steps on the Get Started website, then register for an Intro to Course Planning webinar to learn how to enrol and create your timetable." },
+    { l1: "I’m a new student and need help getting started", l2: "What is the Student Learning Entitlement (SLE)?", answer: "The SLE caps Commonwealth Supported Place (CSP) study at 7 years of full-time study (7 EFTSL), after which you must transfer to a fee-paying place." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How is my Weighted Average Mark (WAM) calculated and what counts toward it?", answer: "WAM is a weighted average of your marks multiplied by subject credit points; it includes failed subjects but excludes pass/fail or withdrawn subjects." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How do I access ongoing support, including an Academic Adjustment Plan (AAP)?", answer: "Register with Student Equity and Disability Support (SEDS) using valid medical documentation to set up an AAP for ongoing study adjustments." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What support can I get if circumstances affect my assessments?", answer: "Apply for Special Consideration within four days of your assessment if unexpected illness or hardship impacts your performance." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What should I do if I fail a subject?", answer: "Review your study plan to see if the failed subject is a core requirement or prerequisite, as you may need to repeat it or select an alternative." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "Why can't I see my final results after the results release date?", answer: "Your results may be withheld due to outstanding university fees, administrative sanctions, or pending academic integrity investigations." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What options do I have if I miss, fail, or am worried about an exam?", answer: "Depending on your specific eligibility, you can apply for Special Consideration, sit a supplementary exam, or take a Final Subject Assessment (FSA)." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "How do I access a faculty-managed supplementary exam?", answer: "You must apply for Special Consideration or meet your specific faculty's eligibility criteria to be granted a supplementary exam." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "Can I apply to extend my Maximum Course Length before a CAPC meeting?", answer: "Yes, you must submit an application for an extension if your remaining degree requirements will push you past your maximum allowable course duration." },
+    { l1: "I need support with exams, assessments, results, or ongoing circumstances affecting my study", l2: "What is Final Subject Assessment (FSA), and how does it work?", answer: "An FSA provides one final attempt to pass a single failed subject if it is the absolute last requirement preventing you from graduating." },
+    { l1: "I’m considering another course or graduate study", l2: "What are the entry requirements for my course, and are there guaranteed entry pathways?", answer: "Check the Study at Melbourne website for course-specific prerequisites, minimum ATAR or WAM requirements, and exact guaranteed entry pathways." },
+    { l1: "I’m considering another course or graduate study", l2: "What is Graduate Access Melbourne (GAM), and how do I apply?", answer: "GAM is an equity program that considers personal circumstances affecting your grades; you apply for it directly within your standard graduate course application." },
+    { l1: "I’m considering another course or graduate study", l2: "Who can I speak to about graduate coursework study options?", answer: "Book an appointment with Course Planning to specifically discuss entry requirements, pathways, and how your current study supports your graduate goals." },
+    { l1: "I’m considering another course or graduate study", l2: "Do I still need to re‑enrol if I’ve applied to transfer courses?", answer: "Yes, you must re-enrol in your current course for the upcoming half-year to maintain your student status while your transfer application is assessed." },
+    { l1: "I’m considering another course or graduate study", l2: "How do I transfer from one University of Melbourne degree to another?", answer: "Submit the internal Undergraduate Course Transfer form; approval depends on meeting entry requirements, academic performance, and place availability." },
+    { l1: "I’m considering another course or graduate study", l2: "What should I do about my summer subject if I’m transferring courses?", answer: "Finish the subject in your old course and apply for credit, or submit an Enrolment Assistance Form to transfer it to your new course before the census date." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can someone review my course plan in My Course Planner?", answer: "Book a Course Planning appointment and share your unique My Course Planner URL with the adviser for a personalized review of your timeline." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "What happens if I withdraw from a subject?", answer: "Withdrawing before the census date avoids financial and academic penalties, whereas withdrawing later will result in fee liabilities and a 'WD' or 'WN' grade." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can I get advice on the subjects I’ve chosen this semester?", answer: "Check your choices against the University Handbook rules, or book a 15-minute course advice appointment to confirm your plan meets degree requirements." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "How do I take part in Melbourne Plus activities?", answer: "Browse the online Catalogue, complete an approved activity, and submit a reflection to earn verified digital credentials for your resume." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can I get help with my Skills Towards Employment Program (STEP) subject?", answer: "Attend STEP-specific workshops or consult your tutor to get direct help with navigating the career-readiness requirements of the program." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "What internship subjects can I take, and how do I apply?", answer: "Review the Handbook for eligible curricular internships or self-source a placement, then apply for vocational placement approval through your faculty." },
+    { l1: "I need help choosing, changing, or planning my subjects", l2: "Can someone help me understand my subject prerequisites?", answer: "Review the 'Eligibility and requirements' section in the Handbook, or book a Course Planning appointment if your prior study background makes prerequisites unclear." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "What are my part-time study options, and will it affect my course plan?", answer: "Domestic students can drop below 37.5 points to study part-time, but student visa holders cannot drop below 50 points per semester without an approved Reduced Study Load." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "What do I need to know about changing my study load (reducing or overloading)?", answer: "Overloading usually requires a 70% WAM, while reducing load requires an approved Reduced Study Load (RSL) application if you are an international student." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "Am I eligible for an early exit award?", answer: "You may exit some graduate courses early with a Graduate Certificate or Diploma if you have completed 50 or 100 points and meet specific faculty rules." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "Can someone help me understand my course structure and course rules?", answer: "Always refer to the University Handbook for the specific year you commenced your course to accurately track your required subjects and progression rules." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "What do I need to know before taking a Leave of Absence?", answer: "A Leave of Absence pauses your studies for 1-2 semesters (after your first 6 months) and holds your exact fee place type until you return." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "Am I on track to complete my degree?", answer: "Check your 'Course Progression' tool in my.unimelb to verify your completed credit points against your degree's core and elective requirements." },
+    { l1: "I need to understand my course structure, majors/minors and study load", l2: "How do I plan or change my major, minor, or specialisation?", answer: "Update your preferences directly via the 'Study Plan' tab in my.unimelb, ensuring your new choice fits within your remaining degree timeline." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "How do I withdraw from my course?", answer: "Withdraw from all current subjects before their census dates to avoid fees, then submit a formal course withdrawal request via my.unimelb." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Am I eligible for a concurrent diploma, and how do I add one to my course?", answer: "Apply via the 'Internal Course Application' tab in my.unimelb, ensuring you have enough cross-creditable space left in your primary bachelor's degree." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I apply for Honours before finishing my concurrent diploma?", answer: "Yes, you can apply for Honours, but you must carefully map your study plan to ensure both your bachelor's and diploma qualifications are completed on time." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I defer my course, and where can I get advice before deciding?", answer: "Commencing students can defer via the Get Started portal; speak with Course Planning first to understand exactly how deferring impacts your future timeline." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Why can't I enrol in a subject?", answer: "Enrolment blocks typically happen if you haven't met prerequisites, the subject quota is full, there's a timetable clash, or you have an administrative sanction." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "How do I make changes to my Study Plan or subjects?", answer: "Use the 'Enrol in Subjects' tool under the Enrolment tab in my.unimelb to swap, add, or withdraw from subjects in accordance with your degree rules." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Why can't I enrol in a quota subject?", answer: "Quota subjects have strict capacity limits and specific application deadlines; if full, you must wait for the next intake or select an alternative subject." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What should I do if I've been removed from my course for non-enrolment?", answer: "Immediately submit an Enrolment and Academic Records form to apply for reinstatement, noting that late fees and academic conditions may apply." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What do I need to do to re-enrol, and what if I miss the deadline?", answer: "Re-enrol via my.unimelb during the standard re-enrolment period; missing this deadline risks course cancellation and requires a formal reinstatement application." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "What is a concurrent diploma, and how does it work?", answer: "A concurrent diploma is an additional 100-point qualification (like Languages or Informatics) completed alongside your primary bachelor's degree." },
+    { l1: "I need help enrolling and managing my study plan for my course or concurrent diploma", l2: "Can I change how a subject counts across my Bachelor and concurrent diploma?", answer: "Submit a 'Cross-Credit' update request via webform to reallocate a completed subject between your primary degree and your concurrent diploma study plan." },
+    { l1: "I have questions about credit from my previous study", l2: "Can I change my entry point in a graduate course?", answer: "Entry points are determined by relevant prior study; you must submit a formal credit application for the faculty to assess if you qualify for a shorter duration." },
+    { l1: "I have questions about credit from my previous study", l2: "How do I plan my course if I have advanced standing (credit)?", answer: "Use your credit outcome letter to mark those subjects as complete in My Course Planner, then map out only the remaining requirements for your degree." },
+    { l1: "I have questions about credit from my previous study", l2: "Am I eligible for advanced standing (credit) in my course?", answer: "Submit a formal advanced standing application with official transcripts and subject syllabuses from your previous institution to find out." },
+    { l1: "I have questions about credit from my previous study", l2: "Can I re-apply for advanced standing (credit) that I previously removed?", answer: "Yes, you can re-apply for previously declined or removed credit via the advanced standing portal, provided the prior study still aligns with your current course." },
+    { l1: "I have questions about credit from my previous study", l2: "Can I enrol in subjects while my credit application is being assessed?", answer: "Yes, you should enrol in other required subjects to secure your timetable, but avoid enrolling in the exact subjects you are seeking credit for." },
+    { l1: "I have questions about credit from my previous study", l2: "Can I get an exemption for my Discovery subject?", answer: "Discovery subjects are mandatory under the Melbourne model, and exemptions are only granted in very rare cases with proof of extensive equivalent study." },
+    { l1: "I have questions about credit from my previous study", l2: "Can I remove advanced standing (credit) that's already been applied?", answer: "Yes, you can submit a request to rescind applied credit if you decide you would rather take the equivalent subject at the University of Melbourne." },
+    { l1: "I want to study overseas as part of my course", l2: "What do I need to know about going on exchange?", answer: "Review the Global Learning website for crucial eligibility criteria (like minimum WAM), application deadlines, and a list of approved partner universities." },
+    { l1: "I want to study overseas as part of my course", l2: "Do course progression rules still apply while I'm on exchange?", answer: "Yes, you must get your overseas subjects pre-approved by your faculty to ensure they fulfill your specific degree and progression requirements." },
+    { l1: "I want to study overseas as part of my course", l2: "What do I need to know about going on exchange in my final semester?", answer: "A final semester exchange often delays your graduation, as overseas transcripts usually arrive too late for the University's standard completion deadlines." },
+    { l1: "I want to study overseas as part of my course", l2: "Can I study overseas as part of my course?", answer: "Yes, you can complete semester-long exchanges, short-term intensives, or independent study abroad programs, managed through Global Learning." },
+    { l1: "I want to study overseas as part of my course", l2: "Will studying on exchange affect my WAM?", answer: "No, exchange subjects are recorded as 'Pass' or 'Fail' on your University of Melbourne transcript and do not alter your WAM." },
+    { l1: "I want to study overseas as part of my course", l2: "How do I know which exchange subjects will count for credit?", answer: "You must map partner university subjects to your degree requirements and submit a proposed study plan for faculty approval before you depart." }
 ];
 
 const detailedContentMap = {
@@ -652,8 +642,6 @@ function updateUI() {
         activeTabs.forEach(tab => allowedL1s.push(...categories[tab]));
         filtered.forEach(item => {
             if (allowedL1s.includes(item.l1)) {
-                // Prioritize search relevance by only giving a tiny boost to selected categories when there's an active search.
-                // If no search query, give a huge boost so selected categories float to the top.
                 item.score += (rawInput.length > 0) ? 5 : 10000;
             }
         });
@@ -851,13 +839,11 @@ function sendChatMessage() {
         }
     });
 
-    // Simulate conversational response delay
     setTimeout(() => {
         if (bestScore >= 40 && bestMatch) {
-            // Chatbot delivers the 1-sentence helpful summary based on the search of the larger corpus
             addChatMessage(bestMatch.answer, 'bot');
         } else {
-            addChatMessage("Would you like to meet with someone?", 'bot');
+            addChatMessage("I'm not exactly sure about that. Would you like to meet with someone from Course Planning?", 'bot');
         }
     }, 600);
 }
