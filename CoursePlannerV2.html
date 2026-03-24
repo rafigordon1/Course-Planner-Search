@@ -351,6 +351,7 @@
             line-height: 1.5;
             max-width: 90%;
             word-wrap: break-word;
+            white-space: pre-wrap; /* Allows line breaks to render cleanly */
         }
         .bot-msg {
             background: white;
@@ -638,11 +639,18 @@ function updateUI() {
     let allowedL1s = [];
     if (activeTabs.length > 0) {
         activeTabs.forEach(tab => allowedL1s.push(...categories[tab]));
-        filtered.forEach(item => {
-            if (allowedL1s.includes(item.l1)) {
-                item.score += (rawInput.length > 0) ? 5 : 10000;
-            }
-        });
+        
+        if (rawInput.length === 0) {
+            // Strict filtering when no search term is entered
+            filtered = filtered.filter(item => allowedL1s.includes(item.l1));
+        } else {
+            // Override strict filtering if searching, but boost the selected categories
+            filtered.forEach(item => {
+                if (allowedL1s.includes(item.l1)) {
+                    item.score += 50; 
+                }
+            });
+        }
     }
     
     filtered.sort((a, b) => b.score - a.score);
@@ -838,8 +846,9 @@ function sendChatMessage() {
 
     setTimeout(() => {
         if (bestScore >= 40 && bestMatch) {
-            // Provide the fully detailed specific information rather than the summarized version
-            addChatMessage(bestMatch.content, 'bot');
+            // Conversational response formatting
+            const conversationalResponse = `Here is what I found regarding your question:\n\n${bestMatch.answer}\n\nIf you need more details, you can look for the section titled "${bestMatch.l2}" in the course planning results.`;
+            addChatMessage(conversationalResponse, 'bot');
         } else {
             addChatMessage("I couldn't find a specific answer to your question. Could you try rephrasing or using different keywords?", 'bot');
         }
