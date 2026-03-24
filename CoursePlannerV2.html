@@ -195,9 +195,6 @@
             background: #fff;
             transition: background-color 0.2s ease;
         }
-        .accordion-item.highlight-bg {
-            background-color: var(--hover-light-blue);
-        }
         .accordion-header {
             width: 100%;
             text-align: left;
@@ -312,7 +309,7 @@
             transform: translateY(-3px); 
         }
         .chatbot-window {
-            width: 350px;
+            width: 380px;
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.2);
@@ -339,7 +336,7 @@
             line-height: 1;
         }
         .chatbot-messages {
-            height: 320px;
+            height: 360px;
             padding: 15px;
             overflow-y: auto;
             display: flex;
@@ -352,7 +349,8 @@
             border-radius: 6px;
             font-size: 14px;
             line-height: 1.5;
-            max-width: 85%;
+            max-width: 90%;
+            word-wrap: break-word;
         }
         .bot-msg {
             background: white;
@@ -664,9 +662,8 @@ function updateUI() {
     } else {
         const paginatedResults = filtered.slice(startIndex, startIndex + resultsPerPage);
         container.innerHTML = paginatedResults.map(item => {
-            const isHighlighted = allowedL1s.includes(item.l1) ? 'highlight-bg' : '';
             return `
-                <div class="accordion-item ${isHighlighted}">
+                <div class="accordion-item">
                     <button class="accordion-header" onclick="toggleAccordion(this)">
                         <span class="accordion-title">${item.l2}</span>
                         <span class="accordion-icon"></span>
@@ -841,9 +838,10 @@ function sendChatMessage() {
 
     setTimeout(() => {
         if (bestScore >= 40 && bestMatch) {
-            addChatMessage(bestMatch.answer, 'bot');
+            // Provide the fully detailed specific information rather than the summarized version
+            addChatMessage(bestMatch.content, 'bot');
         } else {
-            addChatMessage("I'm not exactly sure about that. Would you like to meet with someone from Course Planning?", 'bot');
+            addChatMessage("I couldn't find a specific answer to your question. Could you try rephrasing or using different keywords?", 'bot');
         }
     }, 600);
 }
