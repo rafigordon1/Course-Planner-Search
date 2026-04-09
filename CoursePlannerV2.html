@@ -205,6 +205,7 @@
             justify-content: space-between;
             align-items: center;
             font-family: inherit;
+            cursor: pointer;
         }
         .accordion-title { 
             font-size: 20px; 
@@ -214,6 +215,7 @@
             line-height: 1.3;
             padding-right: 20px;
             display: inline-block;
+            text-decoration: none;
         }
         .accordion-title:hover {
             color: var(--active-tab-blue);
@@ -229,8 +231,6 @@
             transform: translateY(-3px) rotate(45deg);
             transition: transform 0.2s ease;
             flex-shrink: 0;
-            cursor: pointer;
-            padding: 5px; /* Added for slightly larger clickable area */
         }
         .accordion-header.active .accordion-icon {
             transform: translateY(3px) rotate(225deg);
@@ -675,14 +675,14 @@ function updateUI() {
             // Adjust title block based on specific Visa Question
             let titleHtml = `<span class="accordion-title">${item.l2}</span>`;
             if (item.l2 === "What should I do if my student visa isn’t granted in time to start my course?") {
-                titleHtml = `<a href="1.html" target="_blank" class="accordion-title" style="text-decoration: none; color: inherit; cursor: pointer;">${item.l2}</a>`;
+                titleHtml = `<a href="1.html" target="_blank" class="accordion-title">${item.l2}</a>`;
             }
 
             return `
                 <div class="accordion-item">
-                    <div class="accordion-header">
+                    <div class="accordion-header" onclick="toggleAccordion(this, event)">
                         ${titleHtml}
-                        <span class="accordion-icon" onclick="toggleAccordion(this.parentElement)"></span>
+                        <span class="accordion-icon"></span>
                     </div>
                     <div class="accordion-content">
                         ${item.answer}
@@ -749,7 +749,12 @@ window.nextPage = () => {
     }
 };
 
-window.toggleAccordion = (header) => {
+window.toggleAccordion = (header, event) => {
+    // Prevent accordion from toggling if a link was clicked
+    if (event && event.target.tagName.toLowerCase() === 'a') {
+        return;
+    }
+    
     header.classList.toggle("active");
     const content = header.nextElementSibling;
     if (content.style.display === "block") {
