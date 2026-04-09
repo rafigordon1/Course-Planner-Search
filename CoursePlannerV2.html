@@ -201,7 +201,6 @@
             padding: 25px 30px;
             background: none;
             border: none;
-            cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -230,6 +229,8 @@
             transform: translateY(-3px) rotate(45deg);
             transition: transform 0.2s ease;
             flex-shrink: 0;
+            cursor: pointer;
+            padding: 5px; /* Added for slightly larger clickable area */
         }
         .accordion-header.active .accordion-icon {
             transform: translateY(3px) rotate(225deg);
@@ -670,12 +671,19 @@ function updateUI() {
     } else {
         const paginatedResults = filtered.slice(startIndex, startIndex + resultsPerPage);
         container.innerHTML = paginatedResults.map(item => {
+            
+            // Adjust title block based on specific Visa Question
+            let titleHtml = `<span class="accordion-title">${item.l2}</span>`;
+            if (item.l2 === "What should I do if my student visa isn’t granted in time to start my course?") {
+                titleHtml = `<a href="1.html" target="_blank" class="accordion-title" style="text-decoration: none; color: inherit; cursor: pointer;">${item.l2}</a>`;
+            }
+
             return `
                 <div class="accordion-item">
-                    <button class="accordion-header" onclick="toggleAccordion(this)">
-                        <span class="accordion-title">${item.l2}</span>
-                        <span class="accordion-icon"></span>
-                    </button>
+                    <div class="accordion-header">
+                        ${titleHtml}
+                        <span class="accordion-icon" onclick="toggleAccordion(this.parentElement)"></span>
+                    </div>
                     <div class="accordion-content">
                         ${item.answer}
                     </div>
@@ -741,9 +749,9 @@ window.nextPage = () => {
     }
 };
 
-window.toggleAccordion = (button) => {
-    button.classList.toggle("active");
-    const content = button.nextElementSibling;
+window.toggleAccordion = (header) => {
+    header.classList.toggle("active");
+    const content = header.nextElementSibling;
     if (content.style.display === "block") {
         content.style.display = "none";
     } else {
